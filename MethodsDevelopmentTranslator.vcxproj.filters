@@ -24,4 +24,9 @@
       <Filter>Исходные файлы</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="const.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

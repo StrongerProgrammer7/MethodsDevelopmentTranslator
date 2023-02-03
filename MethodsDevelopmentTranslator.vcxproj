@@ -156,6 +156,9 @@
   <ItemGroup>
     <Text Include="C.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="const.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

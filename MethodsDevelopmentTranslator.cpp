@@ -1,7 +1,9 @@
-﻿#include <iostream>
+﻿#include "const.h"
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
+
 
 using namespace std;
 
@@ -30,7 +32,10 @@ using namespace std;
 
 int main()
 {
-    
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 2; j++)
+			cout << serviceWord[i][j] << " : ";
 
+	return 0;
 }
 
