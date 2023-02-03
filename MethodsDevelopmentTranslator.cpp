@@ -1,4 +1,5 @@
 ﻿#include "const.h"
+#include "workWithTable.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -32,9 +33,26 @@ using namespace std;
 
 int main()
 {
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 2; j++)
-			cout << serviceWord[i][j] << " : ";
+	ifstream fileC;
+	fileC.exceptions(ifstream::badbit);
+	try
+	{
+		fileC.open("C.txt");
+
+		if (fileC.is_open())
+		{
+			while (!fileC.eof())
+			{
+
+			}
+		}
+
+	}
+	catch (const ifstream::failure& exep)
+	{
+		cout << " Exception opening/reading file";
+	}
+	fileC.close();
 
 	return 0;
 }

@@ -152,12 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MethodsDevelopmentTranslator.cpp" />
+    <ClCompile Include="workWithTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="const.h" />
+    <ClInclude Include="workWithTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

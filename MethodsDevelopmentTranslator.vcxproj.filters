@@ -13,10 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\function">
+      <UniqueIdentifier>{c38185bb-a9c9-4f37-a0d4-470f3b91b101}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MethodsDevelopmentTranslator.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="workWithTable.cpp">
+      <Filter>Исходные файлы\function</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +33,9 @@
   <ItemGroup>
     <ClInclude Include="const.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="workWithTable.h">
+      <Filter>Исходные файлы\function</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

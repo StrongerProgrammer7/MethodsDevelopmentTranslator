@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <map>
 #define SIZE_serviceWord 8
 #define SIZE_separators 9
 #define SIZE_operation 11
@@ -44,3 +45,10 @@ std::string const separators[SIZE_separators][SIZE_columns] =
 	{".","R8"},
 	{"","R9"}
 };
+
+std::map<std::string, int> Identifier;
+std::map<int, int> numberConst;
+std::map<std::string, int> SymbolsConst;
+/*for (const auto& [city, year] : years) {
+        std::cout << city << ": " << year << "\n";
+    }*/
