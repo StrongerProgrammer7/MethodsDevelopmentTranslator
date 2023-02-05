@@ -1,10 +1,4 @@
-﻿#include "const.h"
-#include "workWithTable.h"
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <vector>
-
+﻿#include "function.h"
 
 using namespace std;
 
@@ -33,7 +27,9 @@ using namespace std;
 
 int main()
 {
-	ifstream fileC;
+	cout << getServiceWordCode("w");
+	/*ifstream fileC;
+	ofstream fileAnalysis;
 	fileC.exceptions(ifstream::badbit);
 	try
 	{
@@ -52,7 +48,7 @@ int main()
 	{
 		cout << " Exception opening/reading file";
 	}
-	fileC.close();
+	fileC.close();*/
 
 	return 0;
 }

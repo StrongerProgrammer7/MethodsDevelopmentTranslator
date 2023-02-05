@@ -151,15 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="function.cpp" />
     <ClCompile Include="MethodsDevelopmentTranslator.cpp" />
-    <ClCompile Include="workWithTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="const.h" />
-    <ClInclude Include="workWithTable.h" />
+    <ClInclude Include="function.h" />
+    <ClInclude Include="table.h" />
+    <ClInclude Include="include.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
