@@ -35,6 +35,11 @@ bool isServiceSymbols(int elem)
 {
 	return elem == 7 || elem == 8 || elem == 9 || elem == 10 || elem == 11 || elem == 12 || elem == 13 ? true : false;
 }
+/* +-/*/
+bool isOperation(string str, int ind)
+{
+	return (str[ind] == '+' && str[ind + 1] != '+') || str[ind] == '-' || str[ind] == '/' || str[ind] == '*' ? true : false;
+}
 
 int main()
 {
@@ -63,6 +68,20 @@ int main()
 							fileAnalysis << getCodeWord(temp) << " ";
 						temp = stringC[i];
 						fileAnalysis << getCodeWord(temp) << " ";
+						temp = "";
+						continue;
+					}
+					if (isOperation(stringC,i)==true)
+					{
+						string temp2 = "";
+						temp2 += stringC[i];
+						if (stringC[i + 1] == '+' || stringC[i + 1] == '-')
+						{
+							temp2 += stringC[i + 1];
+							i++;
+						}
+
+						fileAnalysis << getCodeWord(temp2) << " ";
 						temp = "";
 						continue;
 					}
