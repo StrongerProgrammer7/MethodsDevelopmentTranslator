@@ -44,24 +44,38 @@ int main()
 				getline(fileC, stringC);
 				for (int i = 0; i < stringC.length()-1; i++)
 				{
+					if (i != 0 && stringC[i] == '*' && isLetter((int)stringC[i - 1]) == true)
+						fileAnalysis << getCodeWord(stringC[i-1]+"*");
 					if (stringC[i] != ' ')
 					{
-						if (isLetter(stringC[i]) == true && (isLetter(stringC[i+1])==false || isDigit(stringC[i+1])==false))
+						if (isLetter((int)stringC[i]) == true && (isLetter((int)stringC[i+1])==false || isDigit((int)stringC[i+1])==false))
 						{
-
+							temp += stringC[i];
+							fileAnalysis << getCodeWord(temp) << " ";
+							temp = "";
+							continue;
 						}
 						else
 						{
-							temp += stringC[i];
+							if(stringC[0] == '#')
+								temp += stringC[i];
 						}
+						temp += stringC[i];
 					}
 					else
 					{
-						string out = getServiceWordCode(temp);
-						
+						if (stringC[i] == ' ' && temp == "\0")
+							continue;
+						else
+							if (stringC[i] == ' ')
+							{
+								fileAnalysis << getCodeWord(temp) << " ";
+								temp = "";
+							}						
 					}
-
+					
 				}
+				fileAnalysis << "\n";
 			}
 		}
 
@@ -72,6 +86,7 @@ int main()
 	}
 
 	fileC.close();
+	fileAnalysis.close();
 
 	return 0;
 }

@@ -1,22 +1,27 @@
 #include "table.h"
 #include "function.h"
 
-bool isLetter(char elem)
+bool isLetter(int elem)
 {
-	return (elem >= '65' && elem <= '90') || (elem >= '97' && elem <= '122') ? true : false;
+	return (elem >= 65 && elem <= 90) || (elem >= 97 && elem <= 122) ? true : false;
 }
 
-bool isDigit(char elem)
+bool isDigit(int elem)
 {
-	return elem >= '48' && elem <= '57' ? true : false;
+	return elem >= 48 && elem <= 57 ? true : false;
 }
 
 bool isNumber(string num)
 {
 	for (int i = 0; i < num.length(); i++)
-		if (isDigit(num[i]) == false)
+		if (isDigit((int)num[i]) == false)
 			return false;
 	return true;
+}
+
+bool isLibrary_header(string word)
+{
+	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
 }
 
 string getServiceWordCode(string str)
@@ -67,6 +72,23 @@ string getSymbolsConstCode(string str)
 	return "\0";
 }
 
+void addCode(string str, map<string, string> table, int numTable)
+{
+	int indexCode = 0;
+	for (const auto& word : table)
+	{
+		indexCode++;
+	}
+	indexCode++;
+	if(numTable==1)
+		table.insert(pair<string, string>(str, "I" + indexCode));
+	if(numTable==2)
+		table.insert(pair<string, string>(str, "N" + indexCode));
+	if(numTable==3)
+		table.insert(pair<string, string>(str, "C" + indexCode));
+}
+
+
 string getCodeWordLength_1(string word)
 {
 	string code = getOperationsCode(word);
@@ -74,15 +96,19 @@ string getCodeWordLength_1(string word)
 		code = getSeparatorsCode(word);
 	if (code=="\0")
 	{
-		if (isDigit(word[0]) == true)
+		if (isDigit((int)word[0]) == true)
 		{
 			code = getNumberConstCode(word);
-			//TODO: Add constant
+			if(code =="\0")
+				addCode(word, numberConst, 2);
+			return getNumberConstCode(word);
 		}
-		if (isLetter(word[0]) == true)
+		if (isLetter((int)word[0]) == true)
 		{
 			code = getIdentifierCode(word);
-			//TODO: Add word
+			if(code=="\0")
+				addCode(word,identifier,1);
+			return getIdentifierCode(word);
 		}
 	}
 	else
@@ -91,8 +117,11 @@ string getCodeWordLength_1(string word)
 	}
 }
 
+
 string getCodeWordLengthGreaterOne(string word)
 {
+	if (isLetter((int)word[0]) == true && word[1] == '*')
+		return getSeparatorsCode(word);
 	string code = getServiceWordCode(word);
 	if (code == "\0")
 		code = getOperationsCode(word);
@@ -101,24 +130,31 @@ string getCodeWordLengthGreaterOne(string word)
 		if (isNumber(word) == true)
 		{
 			code = getNumberConstCode(word);
+			if(code=="\0")
+				addCode(word, numberConst, 2);
+			return getNumberConstCode(word);
 		}
 		else
 		{
-			if (word[0] == '34')
+			if ((int)word[0] == 34)
 			{
-				code = getSymbolsConstCode(word);
-				if (code == "\0")
+				if (isLibrary_header(word) == false)
 				{
-					//TODO:ADD const sym
+					code = getSymbolsConstCode(word);
+					if (code == "\0")
+						addCode(word, symbolsConst, 3);
+					return getSymbolsConstCode(word);
 				}
+				else
+					goto addCodeIdentifier;				
 			}
 			else
 			{
+addCodeIdentifier:
 				code = getIdentifierCode(word);
 				if (code == "\0")
-				{
-					//TODO:ADD id
-				}
+					addCode(word, identifier, 1);
+				return getIdentifierCode(word);
 			}
 			
 		}
@@ -130,11 +166,7 @@ string getCodeWordLengthGreaterOne(string word)
 string getCodeWord(string word)
 {
 	if (word.length() == 1)
-	{
 		return getCodeWordLength_1(word);
-	}
 	else
-	{
 		return getCodeWordLengthGreaterOne(word);
-	}
 }
