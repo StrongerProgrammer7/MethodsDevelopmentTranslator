@@ -96,7 +96,10 @@ int main()
 						{
 							fileAnalysis << getCodeWord(temp) << " ";
 							temp = "";
-							
+							if (stringC[posClose + 1] == '\0')
+								break;
+							else
+								i = posClose;
 						}
 						else
 						{
@@ -105,6 +108,7 @@ int main()
 								if (temp != "" && (int)temp[temp.length() - 2] != 92)
 								{
 									fileAnalysis << getCodeWord(temp) << " ";
+									i = posClose;
 								}
 							}
 							else
@@ -115,12 +119,9 @@ int main()
 							}
 
 							temp = "";
-							if (stringC[posClose + 1] == '\0')
-								break;
-							else
-								i = posClose;
-							continue;
+
 						}
+						continue;
 					}
 					
 					if (stringC[i] != ' ')
