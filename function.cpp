@@ -72,7 +72,7 @@ string getSymbolsConstCode(string str)
 	return "\0";
 }
 
-void addCode(string str, map<string, string> table, int numTable)
+void addCode(string str, map<string, string> &table, int numTable)
 {
 	int indexCode = 0;
 	for (const auto& word : table)
@@ -81,11 +81,11 @@ void addCode(string str, map<string, string> table, int numTable)
 	}
 	indexCode++;
 	if(numTable==1)
-		table.insert(pair<string, string>(str, "I" + indexCode));
+		table.insert(pair<string, string>(str, "I" + to_string(indexCode)));
 	if(numTable==2)
-		table.insert(pair<string, string>(str, "N" + indexCode));
+		table.insert(pair<string, string>(str, "N" + to_string(indexCode)));
 	if(numTable==3)
-		table.insert(pair<string, string>(str, "C" + indexCode));
+		table.insert(pair<string, string>(str, "C" + to_string(indexCode)));
 }
 
 
@@ -120,8 +120,11 @@ string getCodeWordLength_1(string word)
 
 string getCodeWordLengthGreaterOne(string word)
 {
-	if (isLetter((int)word[0]) == true && word[1] == '*')
+	/*if (word == "p*")
+	{
+		word.erase(0, 1);
 		return getSeparatorsCode(word);
+	}*/
 	string code = getServiceWordCode(word);
 	if (code == "\0")
 		code = getOperationsCode(word);
