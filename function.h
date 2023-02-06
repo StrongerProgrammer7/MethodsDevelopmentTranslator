@@ -1,12 +1,14 @@
 #pragma once
 #ifndef FUNCTION_H
 #define FUNCTION_H
-#include <iostream>
+#include "include.h"
 
-std::string getServiceWordCode(std::string);
-std::string getOperationsCode(std::string str);
-std::string getSeparatorsCode(std::string str);
-std::string getIdentifierCode(std::string str);
-std::string getNumberConstCode(std::string str);
-std::string getSymbolsConstCode(std::string str);
+bool isDigit(char);
+bool isLetter(char);
+string getServiceWordCode(string);
+string getOperationsCode(string str);
+string getSeparatorsCode(string str);
+string getIdentifierCode(string str);
+string getNumberConstCode(string str);
+string getSymbolsConstCode(string str);
 #endif

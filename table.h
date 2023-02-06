@@ -4,7 +4,7 @@
 
 #include "include.h"
 
-#define SIZE_serviceWord 8
+#define SIZE_serviceWord 11
 #define SIZE_separators 10
 #define SIZE_operation 12
 #define SIZE_columns 2
@@ -18,7 +18,10 @@ string const serviceWord[SIZE_serviceWord][SIZE_columns] =
 	{"if","W5"},
 	{"else","W6"},
 	{"while","W7"},
-	{"return","W8"}
+	{"#include","W8"},
+	{"malloc","W9"},
+	{"sizeof","W0"},
+	{"return","W11"}
 };
 
 string const operations[SIZE_operation][SIZE_columns] =

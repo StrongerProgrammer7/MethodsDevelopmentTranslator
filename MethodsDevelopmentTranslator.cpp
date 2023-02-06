@@ -25,10 +25,10 @@ using namespace std;
 	Cycle: while() {..}
 */
 
+
 int main()
 {
-	cout << getServiceWordCode("w");
-	/*ifstream fileC;
+	ifstream fileC;
 	ofstream fileAnalysis;
 	fileC.exceptions(ifstream::badbit);
 	try
@@ -39,7 +39,29 @@ int main()
 		{
 			while (!fileC.eof())
 			{
+				string stringC = "";
+				string temp = "";
+				getline(fileC, stringC);
+				for (int i = 0; i < stringC.length()-1; i++)
+				{
+					if (stringC[i] != ' ')
+					{
+						if (isLetter(stringC[i]) == true && (isLetter(stringC[i+1])==false || isDigit(stringC[i+1])==false))
+						{
 
+						}
+						else
+						{
+							temp += stringC[i];
+						}
+					}
+					else
+					{
+						string out = getServiceWordCode(temp);
+						
+					}
+
+				}
 			}
 		}
 
@@ -48,7 +70,8 @@ int main()
 	{
 		cout << " Exception opening/reading file";
 	}
-	fileC.close();*/
+
+	fileC.close();
 
 	return 0;
 }
