@@ -9,6 +9,8 @@ bool isOperation(string const &str, int const &ind);
 bool isLogicalOperation(string const& str, int const& ind);
 bool isIncrement(string const& str, int const& ind);
 bool isDoubleOperation(string const& str, int const& ind);
+bool isComment(int const& slash, int const& star);
+bool isOneStringComment(int const& slash, int const& slash2);
 bool isDigit(int const &);
 bool isLetter(int const &);
 bool isLibrary_header(string const &);

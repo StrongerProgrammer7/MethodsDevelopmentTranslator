@@ -36,130 +36,146 @@ int main(int argc, char* argv[])
 
 		if (fileC.is_open())
 		{
+			bool readComment = false;
+			string temp = "";
 			while (!fileC.eof())
 			{
 				string stringLanguageC = "";
-				string temp = "";
 				getline(fileC, stringLanguageC);
 				for (unsigned int i = 0; i < stringLanguageC.length(); i++)
 				{
 					if (isServiceSymbols((int)stringLanguageC[i]) == true)
 						continue;
-							
-					if (isSeparators((int)stringLanguageC[i]) == true && temp[0] != '\"')
+					if (isComment((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
+						readComment = true;
+					if (readComment == false && isOneStringComment((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
 					{
-						if (temp.length() != 0)
-							fileAnalysis << getCodeWord(temp) << " ";
-						temp = stringLanguageC[i];
-						fileAnalysis << getCodeWord(temp) << " ";
-						temp = "";
-						continue;
+						string temp2 = "";
+						temp2.assign(stringLanguageC, i, stringLanguageC.length() - i);
+						fileAnalysis << temp2 << " ";
+						break;
 					}
-					
-					// <library.h> and "string"
-					if (stringLanguageC[i] == '<' || stringLanguageC[i] == '\"')
+					if (readComment == true && isComment((int)stringLanguageC[i + 1], (int)stringLanguageC[i]) == true)
 					{
-						int posClose = 0;
-						int countSymbols = 0;
-						if (stringLanguageC[i] == '<')
-							posClose = stringLanguageC.find(">", 1);
-						else
-							posClose = stringLanguageC.rfind('\"');
-				
-						if (posClose != -1)
-						{
-							countSymbols = posClose + 1 - i;
-							temp.assign(stringLanguageC, i, countSymbols);
-							if (temp.find(".h") != -1)
-							{
-								fileAnalysis << getCodeWord(temp) << " ";
-								temp = "";
-								if (stringLanguageC[posClose + 1] == '\0')
-									break;
-								else
-									i = posClose;
-							}
-							else
-							{
-								if (temp[0] == '\"')
-								{
-									fileAnalysis << getCodeWord(temp) << " ";
-									i = posClose;
-
-								}
-							}
-							temp = "";
-							//continue;
-						}
-					}
-
-					if (isOperation(stringLanguageC, i) == true || isLogicalOperation(stringLanguageC, i) == true)
-					{
-						if (isIncrement(stringLanguageC, i) == true || isDoubleOperation(stringLanguageC, i) == true)
-						{
-							temp += stringLanguageC[i];
-							i++;
-						}
+						readComment = false;
 						temp += stringLanguageC[i];
-						fileAnalysis << getCodeWord(temp) << " ";
+						temp += stringLanguageC[i + 1];
+						if (temp != "\0" && temp!= "/**/")
+							fileAnalysis << temp << " ";
 						temp = "";
+						i++;
 						continue;
+
 					}
-					
-					if (stringLanguageC[i] != ' ')
+						
+					if (readComment == false)
 					{
-						if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i+1])==false && isDigit((int)stringLanguageC[i+1])==false))
+						if (isSeparators((int)stringLanguageC[i]) == true && temp[0] != '\"')
 						{
-							/*if (temp[0] == '\"')
+							if (temp.length() != 0)
+								fileAnalysis << getCodeWord(temp) << " ";
+							temp = stringLanguageC[i];
+							fileAnalysis << getCodeWord(temp) << " ";
+							temp = "";
+							continue;
+						}
+
+						// <library.h> and "string"
+						if (stringLanguageC[i] == '<' || stringLanguageC[i] == '\"')
+						{
+							int posClose = 0;
+							int countSymbols = 0;
+							if (stringLanguageC[i] == '<')
+								posClose = stringLanguageC.find(">", 1);
+							else
+								posClose = stringLanguageC.rfind('\"');
+
+							if (posClose != -1)
 							{
-								if (stringLanguageC[i] == '\"' && stringLanguageC[i + 1] == ' ' && stringLanguageC[i + 1] == '\0')
+								countSymbols = posClose + 1 - i;
+								temp.assign(stringLanguageC, i, countSymbols);
+								if (temp.find(".h") != -1)
 								{
-									temp += stringLanguageC[i];
 									fileAnalysis << getCodeWord(temp) << " ";
 									temp = "";
-									continue;
+									if (stringLanguageC[posClose + 1] == '\0')
+										break;
+									else
+										i = posClose;
 								}
 								else
 								{
-									temp += stringLanguageC[i];
-									continue;
+									if (temp[0] == '\"')
+									{
+										fileAnalysis << getCodeWord(temp) << " ";
+										i = posClose;
+
+									}
 								}
+								temp = "";
 							}
-							else
-							{*/
+						}
+
+						if (isOperation(stringLanguageC, i) == true || isLogicalOperation(stringLanguageC, i) == true)
+						{
+							if (isIncrement(stringLanguageC, i) == true || isDoubleOperation(stringLanguageC, i) == true)
+							{
+								temp += stringLanguageC[i];
+								i++;
+							}
+							temp += stringLanguageC[i];
+							fileAnalysis << getCodeWord(temp) << " ";
+							temp = "";
+							continue;
+						}
+
+						if (stringLanguageC[i] != ' ')
+						{
+							if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i + 1]) == false && isDigit((int)stringLanguageC[i + 1]) == false))
+							{
+
 								temp += stringLanguageC[i];
 								fileAnalysis << getCodeWord(temp) << " ";
 								temp = "";
 								continue;
-							
+							}
+							else
+							{
+								if (stringLanguageC[i] == '#')
+								{
+									temp += stringLanguageC[i];
+									continue;
+								}
+
+							}
+							temp += stringLanguageC[i];
 						}
 						else
 						{
-							if (stringLanguageC[i] == '#')
-							{
-								temp += stringLanguageC[i];
+							if (temp == "\0")
 								continue;
+							else
+							{
+								fileAnalysis << getCodeWord(temp) << " ";
+								temp = "";
 							}
-							
 						}
-						temp += stringLanguageC[i];
 					}
 					else
 					{
-						if (temp == "\0")
-							continue;
-						else
-						{
-							fileAnalysis << getCodeWord(temp) << " ";
-							temp = "";
-						}						
+						temp += stringLanguageC[i];
 					}
+					
 				}
 				if (temp != "\0")
 				{
-					fileAnalysis << getCodeWord(temp);
+					if (readComment == false)
+						fileAnalysis << getCodeWord(temp);
+					else
+						temp += '\n';
 				}
-				fileAnalysis << "\n";
+				if(readComment==false)
+					fileAnalysis << "\n";
 			}
 		}
 

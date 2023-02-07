@@ -11,6 +11,7 @@ I5 O20 R7
 R6 
 W11 I5 R7 
 R6 
+/*test comment*/ 
 W1 I6 R3 W1 I4 R4 
 R5 
 W1 I7 O5 I3 R3 I4 R4 R7 
@@ -20,11 +21,14 @@ W7 R3 I4  O5 N1 R4
 R5 
 I8 R1 I9 R2 O5 I4 O6 N2 R7 
 I4 O13 N2 R7 
-I9 O20 R7 
+I9 O20 /*--*/ R7 
 R6 
 W11 I8 R7 
 R6 
-
+// Main 
+/* double
+comment
+*/ 
 W1 W4 R3 W1 I10 R8 I11 W3 O3 I12 R1 R2 R4 
 R5 
 W1 I7 O5 I3 R3 N3 R4 R7 

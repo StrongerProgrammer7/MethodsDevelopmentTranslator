@@ -11,6 +11,7 @@ int sizeNumber(int num)
 	}
 	return count;
 }
+/*test comment*/
 int setDigitNumber(int num)
 {
 	int size = sizeNumber(num);
@@ -20,11 +21,14 @@ int setDigitNumber(int num)
 	{
 		digits[index] = num % 10;
 		num /= 10;
-		index++;
+		index++/*--*/;
 	}
 	return digits;
 }
-
+// Main
+/* double
+comment
+*/
 int main(int argc, const char* argv[])
 {
 	int size = sizeNumber(36);

@@ -38,6 +38,16 @@ bool isDoubleOperation(string const& str, int const& ind)
 		(str[ind] == '*' && str[ind + 1] == '=') || (str[ind] == '/' && str[ind + 1] == '=') ? true : false;
 }
 
+bool isComment(int const &slash, int const& star)
+{
+	return slash == 47 && star == 42? true : false;
+}
+bool isOneStringComment(int const& slash, int const& slash2)
+{
+	return slash == 47 && slash2 == 47 ? true : false;
+}
+
+
 bool isLetter(int const &elem)
 {
 	return (elem >= 65 && elem <= 90) || (elem >= 97 && elem <= 122) ? true : false;
@@ -176,7 +186,7 @@ string getCodeWordLengthGreaterOne(string word)
 		}
 		else
 		{
-			if ((int)word[0] == 34)
+			if ((int)word[0] == 34)// \"
 			{
 				if (isLibrary_header(word) == false)
 				{
