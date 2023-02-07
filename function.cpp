@@ -1,25 +1,62 @@
 #include "table.h"
 #include "function.h"
 
-bool isLetter(int elem)
+// ( ) [  ]  {  } ;
+bool isSeparators(int const &elem)
+{
+	return elem == 40 || elem == 41 || elem == 91 || elem == 93 || elem == 123 || elem == 125 || elem == 59 ? true : false;
+}
+
+// \a \b \t \n \v \f \r
+bool isServiceSymbols(int const &elem)
+{
+	return elem == 7 || elem == 8 || elem == 9 || elem == 10 || elem == 11 || elem == 12 || elem == 13 ? true : false;
+}
+/* +- * / % */
+bool isOperation(string const &str, int const &ind)
+{
+	return str[ind] == '+' || str[ind] == '-' || str[ind] == '/' || str[ind] == '*' || str[ind]== '=' || str[ind] == '%' ? true : false;
+}
+
+/*  < > == >= <= !=  */
+bool isLogicalOperation(string const& str, int const& ind)
+{
+	return str[ind] == '<' || str[ind] == '>' || (str[ind] == '=' && str[ind + 1] == '=') ||
+		(str[ind] == '>' && str[ind + 1] == '=') || (str[ind] == '<' && str[ind + 1] == '=') || (str[ind] == '!' && str[ind + 1] == '=') ? true : false;
+}
+
+//++ --
+bool isIncrement(string const& str, int const& ind)
+{
+	return (str[ind] == '+' && str[ind + 1] == '+') || (str[ind] == '-' && str[ind + 1] == '-') ? true : false;
+}
+
+/* += -= *= /= */
+bool isDoubleOperation(string const& str, int const& ind)
+{
+	return (str[ind] == '+' && str[ind + 1] == '=') || (str[ind] == '-' && str[ind + 1] == '=') ||
+		(str[ind] == '*' && str[ind + 1] == '=') || (str[ind] == '/' && str[ind + 1] == '=') ? true : false;
+}
+
+bool isLetter(int const &elem)
 {
 	return (elem >= 65 && elem <= 90) || (elem >= 97 && elem <= 122) ? true : false;
 }
 
-bool isDigit(int elem)
+bool isDigit(int const &elem)
 {
 	return elem >= 48 && elem <= 57 ? true : false;
 }
 
-bool isNumber(string num)
+bool isNumber(string const &num)
 {
-	for (int i = 0; i < num.length(); i++)
+	for (unsigned int i = 0; i < num.length(); i++)
 		if (isDigit((int)num[i]) == false)
 			return false;
 	return true;
 }
 
-bool isLibrary_header(string word)
+bool isLibrary_header(string const &word)
 {
 	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
 }

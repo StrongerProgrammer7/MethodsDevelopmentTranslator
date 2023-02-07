@@ -25,172 +25,134 @@ using namespace std;
 	Cycle: while() {..}
 */
 
-bool isSeparators(int elem)
-{
-	return elem == 40 || elem == 41 || elem == 91 || elem == 93 || elem == 123 || elem == 125 || elem == 59 ? true : false;
-}
-
-//\t\a\b...
-bool isServiceSymbols(int elem)
-{
-	return elem == 7 || elem == 8 || elem == 9 || elem == 10 || elem == 11 || elem == 12 || elem == 13 ? true : false;
-}
-/* +-/*/
-bool isOperation(string str, int ind)
-{
-	return (str[ind] == '+' && str[ind + 1] != '+') || str[ind] == '-' || str[ind] == '/' || str[ind] == '*' ? true : false;
-}
-
-int main()
+int main(int argc, char* argv[])
 {
 	ifstream fileC;
-	ofstream fileAnalysis("lexical.txt");
+	ofstream fileAnalysis("C:\\Users\\swat5\\source\\repos\\StrongerProgrammer7\\MethodsDevelopmentTranslator\\lexical.txt");
 	fileC.exceptions(ifstream::badbit);
 	try
 	{
-		fileC.open("C.txt");
+		fileC.open("C:\\Users\\swat5\\source\\repos\\StrongerProgrammer7\\MethodsDevelopmentTranslator\\C.txt");
 
 		if (fileC.is_open())
 		{
 			while (!fileC.eof())
 			{
-				string stringC = "";
+				string stringLanguageC = "";
 				string temp = "";
-				getline(fileC, stringC);
-				for (int i = 0; i < stringC.length(); i++)
+				getline(fileC, stringLanguageC);
+				for (unsigned int i = 0; i < stringLanguageC.length(); i++)
 				{
-					if (isServiceSymbols((int)stringC[i]) == true)
+					if (isServiceSymbols((int)stringLanguageC[i]) == true)
 						continue;
 							
-					if (isSeparators((int)stringC[i]) == true && temp[0] != '\"')
+					if (isSeparators((int)stringLanguageC[i]) == true && temp[0] != '\"')
 					{
 						if (temp.length() != 0)
 							fileAnalysis << getCodeWord(temp) << " ";
-						temp = stringC[i];
+						temp = stringLanguageC[i];
 						fileAnalysis << getCodeWord(temp) << " ";
 						temp = "";
 						continue;
 					}
-					if (isOperation(stringC,i)==true)
+					
+					// <library.h> and "string"
+					if (stringLanguageC[i] == '<' || stringLanguageC[i] == '\"')
 					{
-						string temp2 = "";
-						temp2 += stringC[i];
-						if (stringC[i + 1] == '+' || stringC[i + 1] == '-')
+						int posClose = 0;
+						int countSymbols = 0;
+						if (stringLanguageC[i] == '<')
+							posClose = stringLanguageC.find(">", 1);
+						else
+							posClose = stringLanguageC.rfind('\"');
+				
+						if (posClose != -1)
 						{
-							temp2 += stringC[i + 1];
+							countSymbols = posClose + 1 - i;
+							temp.assign(stringLanguageC, i, countSymbols);
+							if (temp.find(".h") != -1)
+							{
+								fileAnalysis << getCodeWord(temp) << " ";
+								temp = "";
+								if (stringLanguageC[posClose + 1] == '\0')
+									break;
+								else
+									i = posClose;
+							}
+							else
+							{
+								if (temp[0] == '\"')
+								{
+									fileAnalysis << getCodeWord(temp) << " ";
+									i = posClose;
+
+								}
+							}
+							temp = "";
+							//continue;
+						}
+					}
+
+					if (isOperation(stringLanguageC, i) == true || isLogicalOperation(stringLanguageC, i) == true)
+					{
+						if (isIncrement(stringLanguageC, i) == true || isDoubleOperation(stringLanguageC, i) == true)
+						{
+							temp += stringLanguageC[i];
 							i++;
 						}
-
-						fileAnalysis << getCodeWord(temp2) << " ";
+						temp += stringLanguageC[i];
+						fileAnalysis << getCodeWord(temp) << " ";
 						temp = "";
 						continue;
 					}
 					
-					// <library.h>
-					if (stringC[i] == '<' || stringC[i] == '\"')
+					if (stringLanguageC[i] != ' ')
 					{
-						int posClose = 0;
-						int countSymbols = 0;
-						if (stringC[i] == '<')
+						if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i+1])==false && isDigit((int)stringLanguageC[i+1])==false))
 						{
-							posClose = stringC.find(">", 1);
-							if (posClose != -1)
+							/*if (temp[0] == '\"')
 							{
-								countSymbols = stringC.length() - i;
-								temp.assign(stringC, i, countSymbols);
-							}
-							
-						}
-						else
-						{
-							posClose = stringC.rfind('\"');
-							if (posClose != -1)
-							{
-								countSymbols = posClose+1 - i;
-								temp.assign(stringC, i, countSymbols);
-							}
-							
-						}						
-						if (temp.find(".h") != -1)
-						{
-							fileAnalysis << getCodeWord(temp) << " ";
-							temp = "";
-							if (stringC[posClose + 1] == '\0')
-								break;
-							else
-								i = posClose;
-						}
-						else
-						{
-							if (temp[0] == '\"')
-							{
-								if (temp != "" && (int)temp[temp.length() - 2] != 92)
+								if (stringLanguageC[i] == '\"' && stringLanguageC[i + 1] == ' ' && stringLanguageC[i + 1] == '\0')
 								{
-									fileAnalysis << getCodeWord(temp) << " ";
-									i = posClose;
-								}
-							}
-							else
-							{
-								string temp2 = "";
-								temp2 += stringC[i];
-								fileAnalysis << getCodeWord(temp2) << " ";
-							}
-
-							temp = "";
-
-						}
-						continue;
-					}
-					
-					if (stringC[i] != ' ')
-					{
-						if (isLetter((int)stringC[i]) == true && (isLetter((int)stringC[i+1])==false && isDigit((int)stringC[i+1])==false))
-						{
-							if (temp[0] == '\"')
-							{
-								if (stringC[i] == '\"' && stringC[i + 1] == ' ' && stringC[i + 1] == '\0')
-								{
-									temp += stringC[i];
+									temp += stringLanguageC[i];
 									fileAnalysis << getCodeWord(temp) << " ";
 									temp = "";
 									continue;
 								}
 								else
 								{
-									temp += stringC[i];
+									temp += stringLanguageC[i];
 									continue;
 								}
 							}
 							else
-							{
-								temp += stringC[i];
+							{*/
+								temp += stringLanguageC[i];
 								fileAnalysis << getCodeWord(temp) << " ";
 								temp = "";
 								continue;
-							}
+							
 						}
 						else
 						{
-							if (stringC[i] == '#')
+							if (stringLanguageC[i] == '#')
 							{
-								temp += stringC[i];
+								temp += stringLanguageC[i];
 								continue;
 							}
 							
 						}
-						temp += stringC[i];
+						temp += stringLanguageC[i];
 					}
 					else
 					{
-						if (stringC[i] == ' ' && temp == "\0")
+						if (temp == "\0")
 							continue;
 						else
-							if (stringC[i] == ' ')
-							{
-								fileAnalysis << getCodeWord(temp) << " ";
-								temp = "";
-							}						
+						{
+							fileAnalysis << getCodeWord(temp) << " ";
+							temp = "";
+						}						
 					}
 				}
 				if (temp != "\0")
