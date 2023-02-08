@@ -116,9 +116,11 @@ int main(int argc, char* argv[])
 							}
 						}
 
-						if (isOperation(stringLanguageC, i) == true || isLogicalOperation(stringLanguageC, i) == true)
+						if (isOperation((int)stringLanguageC[i]) == true || isLogicalSingleOperation((int)stringLanguageC[i]) == true)
 						{
-							if (isIncrement(stringLanguageC, i) == true || isDoubleOperation(stringLanguageC, i) == true)
+							if (isIncrement((int)stringLanguageC[i], (int)stringLanguageC[i+1]) == true || 
+								isDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1] == true) ||
+								isLogicalDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
 							{
 								temp += stringLanguageC[i];
 								i++;
@@ -190,22 +192,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-
-
-/*
-bool isPointer(string word, int index)
-{
-	if (word[index] == '*' && isLetter((int)word[index - 1]) == true && isLetter((int)word[index + 1]) == false && isDigit((int)word[index + 1]) == false && isSeparators((int)word[index+1])==false)
-		return true;
-	int pos = 0;
-	pos = word.find("=", 1);
-	string temp = "";
-	temp.assign(word, index + 1, pos - index);
-	return word.find("+") == -1 && word.find("-") == -1 && word.find("*") == -1 && word.find("/") == -1 && word.find("+") == -1 ? true : false;
-}*/
-/*if (i != 0 && stringC[i]=='*')
-						if (isPointer(stringC, i) == true)
-						{
-							fileAnalysis << getCodeWord("p*") << " ";
-							continue;
-						}*/
