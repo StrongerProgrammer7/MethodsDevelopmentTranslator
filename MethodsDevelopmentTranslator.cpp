@@ -28,11 +28,11 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	ifstream fileC;
-	ofstream fileAnalysis("C:\\Users\\swat5\\source\\repos\\StrongerProgrammer7\\MethodsDevelopmentTranslator\\lexical.txt");
+	ofstream fileAnalysis("lexical.txt");
 	fileC.exceptions(ifstream::badbit);
 	try
 	{
-		fileC.open("C:\\Users\\swat5\\source\\repos\\StrongerProgrammer7\\MethodsDevelopmentTranslator\\C.txt");
+		fileC.open("C.txt");
 
 		if (fileC.is_open())
 		{
