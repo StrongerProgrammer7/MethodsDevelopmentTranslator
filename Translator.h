@@ -14,7 +14,7 @@ protected:
 #define SIZE_separators 9
 #define SIZE_operation 20
 #define SIZE_columns 2
-	string const serviceWord[SIZE_serviceWord][SIZE_columns] =
+	std::string const serviceWord[SIZE_serviceWord][SIZE_columns] =
 	{
 		{"int","W1"},
 		{"float","W2"},
@@ -28,7 +28,7 @@ protected:
 		{"sizeof","W10"},
 		{"return","W11"}
 	};
-	string const separators[SIZE_separators][SIZE_columns] =
+	std::string const separators[SIZE_separators][SIZE_columns] =
 	{
 		{"[","R1"},
 		{"]","R2"},
@@ -41,7 +41,7 @@ protected:
 		//{"*","R9"},
 		{"","R9"}
 	};
-	string const operations[SIZE_operation][SIZE_columns] =
+	std::string const operations[SIZE_operation][SIZE_columns] =
 	{
 		{"+","O1"},
 		{"-","O2"},

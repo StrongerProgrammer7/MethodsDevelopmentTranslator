@@ -9,7 +9,7 @@ SyntaxAnalisator::SyntaxAnalisator()
 SyntaxAnalisator::~SyntaxAnalisator()
 {
 }
-string SyntaxAnalisator::getServiceWordCode(string str)
+std::string SyntaxAnalisator::getServiceWordCode(std::string str)
 {
 	for (int i = 0; i < SIZE_serviceWord; i++)
 		if (serviceWord[i][0] == str)
@@ -17,7 +17,7 @@ string SyntaxAnalisator::getServiceWordCode(string str)
 	return "\0";
 }
 
-string SyntaxAnalisator::getOperationsCode(string str)
+std::string SyntaxAnalisator::getOperationsCode(std::string str)
 {
 	for (int i = 0; i < SIZE_operation; i++)
 		if (operations[i][0] == str)
@@ -25,7 +25,7 @@ string SyntaxAnalisator::getOperationsCode(string str)
 	return "\0";
 }
 
-string SyntaxAnalisator::getSeparatorsCode(string str)
+std::string SyntaxAnalisator::getSeparatorsCode(std::string str)
 {
 	for (int i = 0; i < SIZE_separators; i++)
 		if (separators[i][0] == str)
@@ -33,7 +33,7 @@ string SyntaxAnalisator::getSeparatorsCode(string str)
 	return "\0";
 }
 
-string SyntaxAnalisator::getIdentifierCode(string str)
+std::string SyntaxAnalisator::getIdentifierCode(std::string str)
 {
 	for (const auto& word : identifier)
 		if (word.first == str)
@@ -41,7 +41,7 @@ string SyntaxAnalisator::getIdentifierCode(string str)
 	return "\0";
 }
 
-string SyntaxAnalisator::getNumberConstCode(string str)
+std::string SyntaxAnalisator::getNumberConstCode(std::string str)
 {
 	for (const auto& word : numberConst)
 		if (word.first == str)
@@ -49,7 +49,7 @@ string SyntaxAnalisator::getNumberConstCode(string str)
 	return "\0";
 }
 
-string SyntaxAnalisator::getSymbolsConstCode(string str)
+std::string SyntaxAnalisator::getSymbolsConstCode(std::string str)
 {
 	for (const auto& word : symbolsConst)
 		if (word.first == str)
@@ -57,7 +57,7 @@ string SyntaxAnalisator::getSymbolsConstCode(string str)
 	return "\0";
 }
 
-void SyntaxAnalisator::addCode(string str, map<string, string> & table, int numTable)
+void SyntaxAnalisator::addCode(std::string str, std::map<std::string, std::string> & table, int numTable)
 {
 	int indexCode = 0;
 	for (const auto& word : table)
@@ -66,14 +66,14 @@ void SyntaxAnalisator::addCode(string str, map<string, string> & table, int numT
 	}
 	indexCode++;
 	if (numTable == 1)
-		table.insert(pair<string, string>(str, "I" + to_string(indexCode)));
+		table.insert(std::pair<std::string, std::string>(str, "I" + std::to_string(indexCode)));
 	if (numTable == 2)
-		table.insert(pair<string, string>(str, "N" + to_string(indexCode)));
+		table.insert(std::pair<std::string, std::string>(str, "N" + std::to_string(indexCode)));
 	if (numTable == 3)
-		table.insert(pair<string, string>(str, "C" + to_string(indexCode)));
+		table.insert(std::pair<std::string, std::string>(str, "C" + std::to_string(indexCode)));
 }
 
-int SyntaxAnalisator::checkStringSingleElem(string const& word)
+int SyntaxAnalisator::checkStringSingleElem(std::string const& word)
 {
 	if (isDigit((int)word[0]) == true)
 		return 1;
@@ -86,7 +86,7 @@ int SyntaxAnalisator::checkStringSingleElem(string const& word)
 	return 0;
 }
 
-string SyntaxAnalisator::getCodeWordLength_1(string word)
+std::string SyntaxAnalisator::getCodeWordLength_1(std::string word)
 {
 	switch (checkStringSingleElem(word))
 	{
@@ -108,9 +108,9 @@ string SyntaxAnalisator::getCodeWordLength_1(string word)
 }
 
 
-string SyntaxAnalisator::getCodeWordLengthGreaterOne(string word)
+std::string SyntaxAnalisator::getCodeWordLengthGreaterOne(std::string word)
 {
-	string code = getServiceWordCode(word);
+	std::string code = getServiceWordCode(word);
 	if (code == "\0")
 		code = getOperationsCode(word);
 	if (code == "\0")
@@ -141,7 +141,7 @@ string SyntaxAnalisator::getCodeWordLengthGreaterOne(string word)
 		return code;
 }
 
-string SyntaxAnalisator::getCodeWord(string word)
+std::string SyntaxAnalisator::getCodeWord(std::string word)
 {
 	if (word.length() == 1)
 		return getCodeWordLength_1(word);
@@ -149,11 +149,11 @@ string SyntaxAnalisator::getCodeWord(string word)
 		return getCodeWordLengthGreaterOne(word);
 }
 
-void SyntaxAnalisator::analyze(string filePathOrName_C, string fileName_Path_SaveAnalis)
+void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis)
 {
-	ifstream fileC;
-	ofstream fileAnalysis(fileName_Path_SaveAnalis);
-	fileC.exceptions(ifstream::badbit);
+	std::ifstream fileC;
+	std::ofstream fileAnalysis(fileName_Path_SaveAnalis);
+	fileC.exceptions(std::ifstream::badbit);
 	try
 	{
 		fileC.open(filePathOrName_C);
@@ -161,10 +161,10 @@ void SyntaxAnalisator::analyze(string filePathOrName_C, string fileName_Path_Sav
 		if (fileC.is_open())
 		{
 			bool readComment = false;
-			string temp = "";
+			std::string temp = "";
 			while (!fileC.eof())
 			{
-				string stringLanguageC = "";
+				std::string stringLanguageC = "";
 				getline(fileC, stringLanguageC);
 				for (unsigned int i = 0; i < stringLanguageC.length(); i++)
 				{
@@ -174,9 +174,9 @@ void SyntaxAnalisator::analyze(string filePathOrName_C, string fileName_Path_Sav
 						readComment = true;
 					if (readComment == false && isOneStringComment((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
 					{
-						string temp2 = "";
-						temp2.assign(stringLanguageC, i, stringLanguageC.length() - i);
-						fileAnalysis << temp2 << " ";
+						std::string oneLineComment = "";
+						oneLineComment.assign(stringLanguageC, i, stringLanguageC.length() - i);
+						fileAnalysis << oneLineComment << " ";
 						break;
 					}
 					if (readComment == true && isComment((int)stringLanguageC[i + 1], (int)stringLanguageC[i]) == true)
@@ -305,10 +305,10 @@ void SyntaxAnalisator::analyze(string filePathOrName_C, string fileName_Path_Sav
 		}
 
 	}
-	catch (const ifstream::failure & exep)
+	catch (const std::ifstream::failure & exep)
 	{
-		cout << " Exception opening/reading file";
-		cout << exep.what();
+		std::cout << " Exception opening/reading file";
+		std::cout << exep.what();
 	}
 
 	fileC.close();
