@@ -9,7 +9,7 @@ class SyntaxAnalisator :
 public:
 	SyntaxAnalisator();
 	~SyntaxAnalisator();
-	string getCodeWord(string word);
+	void analyze(string filePathOrName_C, string fileName_Path_SaveAnalis);
 private:
 	string getServiceWordCode(string str);
 	string getOperationsCode(string str);
@@ -21,5 +21,6 @@ private:
 	int checkStringSingleElem(string const& word);
 	string getCodeWordLength_1(string word);
 	string getCodeWordLengthGreaterOne(string word);
+	string getCodeWord(string word);
 };
 #endif
