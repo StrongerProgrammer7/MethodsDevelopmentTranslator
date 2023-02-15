@@ -1,7 +1,7 @@
 #pragma once
 #ifndef FUNCTION_H
 #define FUNCTION_H
-#include "include.h"
+#include <iostream>
 
 bool isSeparators(int const &);
 bool isServiceSymbols(int const &elem);
@@ -14,6 +14,6 @@ bool isComment(int const& slash, int const& star);
 bool isOneStringComment(int const& slash, int const& slash2);
 bool isDigit(int const &);
 bool isLetter(int const &);
-bool isLibrary_header(string const &);
-string getCodeWord(string );
+bool isLibrary_header(std::string const &);
+bool isNumber(std::string const& num);
 #endif

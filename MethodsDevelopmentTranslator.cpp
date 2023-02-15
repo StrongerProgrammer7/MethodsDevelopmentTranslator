@@ -1,4 +1,5 @@
 ﻿#include "function.h"
+#include "SyntaxAnalisator.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+	SyntaxAnalisator analisator;
 	ifstream fileC;
 	ofstream fileAnalysis("lexical.txt");
 	fileC.exceptions(ifstream::badbit);
@@ -73,9 +75,9 @@ int main(int argc, char* argv[])
 						if (isSeparators((int)stringLanguageC[i]) == true && temp[0] != '\"')
 						{
 							if (temp.length() != 0)
-								fileAnalysis << getCodeWord(temp) << " ";
+								fileAnalysis << analisator.getCodeWord(temp) << " ";
 							temp = stringLanguageC[i];
-							fileAnalysis << getCodeWord(temp) << " ";
+							fileAnalysis << analisator.getCodeWord(temp) << " ";
 							temp = "";
 							continue;
 						}
@@ -96,7 +98,7 @@ int main(int argc, char* argv[])
 								temp.assign(stringLanguageC, i, countSymbols);
 								if (temp.find(".h") != -1)
 								{
-									fileAnalysis << getCodeWord(temp) << " ";
+									fileAnalysis << analisator.getCodeWord(temp) << " ";
 									temp = "";
 									if (stringLanguageC[posClose + 1] == '\0')
 										break;
@@ -107,8 +109,8 @@ int main(int argc, char* argv[])
 								{
 									if (temp[0] == '\"')
 									{
-										fileAnalysis << getCodeWord(temp) << " ";
-										i = posClose;
+										fileAnalysis << analisator.getCodeWord(temp) << " ";
+										i = posClose+1;
 
 									}
 								}
@@ -126,7 +128,7 @@ int main(int argc, char* argv[])
 								i++;
 							}
 							temp += stringLanguageC[i];
-							fileAnalysis << getCodeWord(temp) << " ";
+							fileAnalysis << analisator.getCodeWord(temp) << " ";
 							temp = "";
 							continue;
 						}
@@ -137,7 +139,7 @@ int main(int argc, char* argv[])
 							{
 
 								temp += stringLanguageC[i];
-								fileAnalysis << getCodeWord(temp) << " ";
+								fileAnalysis << analisator.getCodeWord(temp) << " ";
 								temp = "";
 								continue;
 							}
@@ -158,7 +160,7 @@ int main(int argc, char* argv[])
 								continue;
 							else
 							{
-								fileAnalysis << getCodeWord(temp) << " ";
+								fileAnalysis << analisator.getCodeWord(temp) << " ";
 								temp = "";
 							}
 						}
@@ -172,7 +174,7 @@ int main(int argc, char* argv[])
 				if (temp != "\0")
 				{
 					if (readComment == false)
-						fileAnalysis << getCodeWord(temp);
+						fileAnalysis << analisator.getCodeWord(temp);
 					else
 						temp += '\n';
 				}
@@ -185,6 +187,7 @@ int main(int argc, char* argv[])
 	catch (const ifstream::failure& exep)
 	{
 		cout << " Exception opening/reading file";
+		cout << exep.what();
 	}
 
 	fileC.close();

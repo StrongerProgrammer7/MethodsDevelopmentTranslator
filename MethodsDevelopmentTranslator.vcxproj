@@ -153,14 +153,19 @@
   <ItemGroup>
     <ClCompile Include="function.cpp" />
     <ClCompile Include="MethodsDevelopmentTranslator.cpp" />
+    <ClCompile Include="SyntaxAnalisator.cpp" />
+    <ClCompile Include="Translator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt" />
+    <Text Include="lexical.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="function.h" />
+    <ClInclude Include="SyntaxAnalisator.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="include.h" />
+    <ClInclude Include="Translator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
