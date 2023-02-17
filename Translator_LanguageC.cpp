@@ -71,3 +71,8 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_
 	}
 	
 }
+
+System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	return System::Void();
+}

@@ -141,6 +141,7 @@ namespace MethodsDevelopmentTranslator {
 			this->btn_reversePolishNotation->TabIndex = 6;
 			this->btn_reversePolishNotation->Text = L"Reverse Polish notation";
 			this->btn_reversePolishNotation->UseVisualStyleBackColor = true;
+			this->btn_reversePolishNotation->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_reversePolishNotation_Click);
 			// 
 			// Translator_LanguageC
 			// 
@@ -171,5 +172,6 @@ namespace MethodsDevelopmentTranslator {
 #pragma endregion
 	private: System::Void Btn_loadFile_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e);
+			 System::Void Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

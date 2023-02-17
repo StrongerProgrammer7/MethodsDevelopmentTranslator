@@ -10,7 +10,7 @@ public:
 	Translator();
 	~Translator();
 protected:
-#define SIZE_serviceWord 11
+#define SIZE_serviceWord 12
 #define SIZE_separators 9
 #define SIZE_operation 20
 #define SIZE_columns 2
@@ -26,7 +26,8 @@ protected:
 		{"#include","W8"},
 		{"malloc","W9"},
 		{"sizeof","W10"},
-		{"return","W11"}
+		{"return","W11"},
+		{"for","W12"}
 	};
 	std::string const separators[SIZE_separators][SIZE_columns] =
 	{
@@ -67,6 +68,29 @@ protected:
 	std::map<std::string, std::string> identifier;
 	std::map<std::string, std::string> numberConst;
 	std::map<std::string, std::string> symbolsConst;
+	std::map<std::string, int> priority =
+	{
+		// if		(			[		ÀÝÌ			Ô		while			for
+		{"W5",0}, { "R3",0 },{ "R1",0 },{ "ÀÝÌ",0 },{ "Ô",0 },{"W7", 0},{"W12", 0},
+		// {		,			;		)		]			else
+		{"R5", 1},{ "R8",1 },{ "R7",1 },{ "R3",1 },{"R2", 1},{"W6", 1},
+		// =
+		{"O5", 2},
+		// |
+		{"|", 3},
+		// &
+		{"&", 4},
+		// not
+		{"not", 5},
+		// <		>		<=			>=		==			!=		&&		||
+		{"O8", 6},{"O7", 6},{"O12", 6},{"O11", 6},{"O9", 6},{"O10", 6},{"O17", 6},{"O18", 6},
+		//+			-			++		--		-=			+=			*=		/=
+		{"O1", 7},{"O2", 7},{"O20", 7},{"O19", 7},{"O15", 7},{"O14", 7},{"O16", 7},{"O13", 7},
+		//*			/		%
+		{"O3", 8},{"O4", 8},{"O6", 8},
+		// :		}
+		{":", 9},{"R6", 9},{"W11", 9}
+	};
 };
 
 #endif
