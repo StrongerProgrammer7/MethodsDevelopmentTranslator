@@ -158,6 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt" />
+    <Text Include="lexical.txt" />
+    <Text Include="test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

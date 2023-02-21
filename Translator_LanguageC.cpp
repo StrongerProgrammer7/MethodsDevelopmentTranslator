@@ -6,6 +6,7 @@
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::IO;
+
 std::string fileText_C = "";
 
 [STAThreadAttribute]
@@ -74,5 +75,12 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	return System::Void();
+	ReversePolishNotation RPN;
+	std::string file = "";
+	marshalString(tb_nameFileAnylize->Text, file);
+	RPN.reversePolishNotationAnalyze(file, "RPN.txt");
+
+	StreamReader^ fileAnalyze = gcnew StreamReader("RPN.txt", System::Text::Encoding::GetEncoding(1251));//File::OpenText("RPN.txt");
+	tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
+	fileAnalyze->Close();
 }

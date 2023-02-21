@@ -7,5 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <stack>
+
 
 #endif

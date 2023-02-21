@@ -126,6 +126,8 @@ namespace MethodsDevelopmentTranslator {
 			// tb_reversePolishNotation
 			// 
 			this->tb_reversePolishNotation->BackColor = System::Drawing::Color::Bisque;
+			this->tb_reversePolishNotation->Font = (gcnew System::Drawing::Font(L"Times New Roman", 11.25F, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
 			this->tb_reversePolishNotation->Location = System::Drawing::Point(442, 42);
 			this->tb_reversePolishNotation->Multiline = true;
 			this->tb_reversePolishNotation->Name = L"tb_reversePolishNotation";
