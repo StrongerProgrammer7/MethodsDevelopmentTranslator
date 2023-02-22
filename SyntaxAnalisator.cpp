@@ -258,8 +258,13 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 						{
 							if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i + 1]) == false && isDigit((int)stringLanguageC[i + 1]) == false))
 							{
-
+								
 								temp += stringLanguageC[i];
+								if ((temp == "int" || temp == "float" || temp == "double" || temp == "char") && stringLanguageC[i + 1] == '*')
+								{
+									temp += stringLanguageC[i + 1];
+									i++;
+								}
 								fileAnalysis << getCodeWord(temp) << " ";
 								temp = "";
 								continue;

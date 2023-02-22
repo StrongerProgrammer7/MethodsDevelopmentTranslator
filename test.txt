@@ -1,1 +1,15 @@
-c + 85 - sizeNumber(x,z,y+2)
+int main(int argc, const char* argv[])
+{
+	int size = sizeNumber(36);
+	int* digitsNumber = setDigitNumber(36);
+	int sum7Digit7 = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if(i<100 && i >0)
+			printf("array[%d] = %d \n", i, digitsNumber[i]);
+		sum7Digit7 += digitsNumber[i];
+	}
+	printf("Summa digit: %d", sum7Digit7);
+	free(digitsNumber);
+	return 0;
+}
