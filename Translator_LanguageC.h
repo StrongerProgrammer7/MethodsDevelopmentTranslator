@@ -175,5 +175,6 @@ namespace MethodsDevelopmentTranslator {
 	private: System::Void Btn_loadFile_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e);
+
 };
 }

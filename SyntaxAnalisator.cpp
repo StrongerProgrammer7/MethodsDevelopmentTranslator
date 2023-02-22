@@ -1,3 +1,4 @@
+#include "Translator_LanguageC.h"
 #include "SyntaxAnalisator.h"
 #include "function.h"
 
@@ -9,6 +10,14 @@ SyntaxAnalisator::SyntaxAnalisator()
 SyntaxAnalisator::~SyntaxAnalisator()
 {
 }
+
+System::String^ StlWStringToString(std::string const& os)
+{
+	System::String^ str = gcnew System::String(os.c_str());
+	//String^ str = gcnew String("");
+	return str;
+}
+
 std::string SyntaxAnalisator::getServiceWordCode(std::string str)
 {
 	for (int i = 0; i < SIZE_serviceWord; i++)
@@ -57,6 +66,7 @@ std::string SyntaxAnalisator::getSymbolsConstCode(std::string str)
 	return "\0";
 }
 
+
 void SyntaxAnalisator::addCode(std::string str, std::map<std::string, std::string> & table, int numTable)
 {
 	int indexCode = 0;
@@ -66,9 +76,28 @@ void SyntaxAnalisator::addCode(std::string str, std::map<std::string, std::strin
 	}
 	indexCode++;
 	if (numTable == 1)
-		table.insert(std::pair<std::string, std::string>(str, "I" + std::to_string(indexCode)));
+	{
+		if(isIdentifier(str)==true)
+			table.insert(std::pair<std::string, std::string>(str, "I" + std::to_string(indexCode)));
+		else
+		{
+			
+			System::String^ temp = StlWStringToString(str);
+			System::Windows::Forms::MessageBox::Show("Error with identifier", temp, System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+			return;
+		}
+	}
 	if (numTable == 2)
-		table.insert(std::pair<std::string, std::string>(str, "N" + std::to_string(indexCode)));
+	{
+		if(isNumber(str)==true)
+			table.insert(std::pair<std::string, std::string>(str, "N" + std::to_string(indexCode)));
+		else
+		{
+			System::String^ temp = StlWStringToString(str);
+			System::Windows::Forms::MessageBox::Show("Error with number", temp, System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+			return;
+		}
+	}
 	if (numTable == 3)
 		table.insert(std::pair<std::string, std::string>(str, "C" + std::to_string(indexCode)));
 }
@@ -149,6 +178,35 @@ std::string SyntaxAnalisator::getCodeWord(std::string word)
 		return getCodeWordLengthGreaterOne(word);
 }
 
+bool SyntaxAnalisator::skipAnalyzeOneLineComment(bool readComment, std::string line, __int64 index,std::ofstream& file)
+{
+	if (readComment == false && isOneStringComment((int)line[index], (int)line[index + 1]) == true)
+	{
+		std::string oneLineComment = "";
+		oneLineComment.assign(line, index, line.length() - index);
+		file << oneLineComment << " ";
+		return true;
+	}
+	return false;
+}
+
+bool skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std::ofstream& file, std::string& word)
+{
+	if (readComment == true && isComment((int)line[index + 1], (int)line[index]) == true)
+	{
+		readComment = false;
+		word += line[index];
+		word += line[index + 1];
+		if (word != "\0" && word != "")
+			file << word << " ";
+		word = "";
+		index++;
+		return true;
+	}
+	return false;
+}
+
+
 void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis)
 {
 	std::ifstream fileC;
@@ -161,45 +219,32 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 		if (fileC.is_open())
 		{
 			bool readComment = false;
-			std::string temp = "";
+			std::string word = "";
 			while (!fileC.eof())
 			{
 				std::string stringLanguageC = "";
 				getline(fileC, stringLanguageC);
-				for (unsigned int i = 0; i < stringLanguageC.length(); i++)
+				for (__int64 i = 0; i < stringLanguageC.length(); i++)
 				{
 					if (isServiceSymbols((int)stringLanguageC[i]) == true)
 						continue;
 					if (isComment((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
 						readComment = true;
-					if (readComment == false && isOneStringComment((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
-					{
-						std::string oneLineComment = "";
-						oneLineComment.assign(stringLanguageC, i, stringLanguageC.length() - i);
-						fileAnalysis << oneLineComment << " ";
+					if (skipAnalyzeOneLineComment(readComment,stringLanguageC,i,fileAnalysis)==true)
 						break;
-					}
-					if (readComment == true && isComment((int)stringLanguageC[i + 1], (int)stringLanguageC[i]) == true)
-					{
-						readComment = false;
-						temp += stringLanguageC[i];
-						temp += stringLanguageC[i + 1];
-						if (temp != "\0" && temp != "/**/")
-							fileAnalysis << temp << " ";
-						temp = "";
-						i++;
+
+					if (skipAnalyzeComment(readComment, stringLanguageC, i, fileAnalysis,word))
 						continue;
-					}
 
 					if (readComment == false)
 					{
-						if (isSeparators((int)stringLanguageC[i]) == true && temp[0] != '\"')
+						if (isSeparators((int)stringLanguageC[i]) == true && word[0] != '\"')
 						{
-							if (temp.length() != 0)
-								fileAnalysis << getCodeWord(temp) << " ";
-							temp = stringLanguageC[i];
-							fileAnalysis << getCodeWord(temp) << " ";
-							temp = "";
+							if (word.length() != 0)
+								fileAnalysis << getCodeWord(word) << " ";
+							word = stringLanguageC[i];
+							fileAnalysis << getCodeWord(word) << " ";
+							word = "";
 							continue;
 						}
 
@@ -216,26 +261,26 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 							if (posClose != -1)
 							{
 								countSymbols = posClose + 1 - i;
-								temp.assign(stringLanguageC, i, countSymbols);
-								if (temp.find(".h") != -1)
+								word.assign(stringLanguageC, i, countSymbols);
+								if (word.find(".h") != -1)
 								{
-									fileAnalysis << getCodeWord(temp) << " ";
-									temp = "";
-									if (stringLanguageC[posClose + 1] == '\0')
+									fileAnalysis << getCodeWord(word) << " ";
+									word = "";
+									if (stringLanguageC[static_cast<__int64>(posClose) + 1] == '\0')
 										break;
 									else
 										i = posClose;
 								}
 								else
 								{
-									if (temp[0] == '\"')
+									if (word[0] == '\"')
 									{
-										fileAnalysis << getCodeWord(temp) << " ";
-										i = posClose + 1;
+										fileAnalysis << getCodeWord(word) << " ";
+										i = static_cast<__int64>(posClose) + 1;
 
 									}
 								}
-								temp = "";
+								word = "";
 							}
 						}
 
@@ -245,12 +290,12 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 								isDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1] == true) ||
 								isLogicalDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
 							{
-								temp += stringLanguageC[i];
+								word += stringLanguageC[i];
 								i++;
 							}
-							temp += stringLanguageC[i];
-							fileAnalysis << getCodeWord(temp) << " ";
-							temp = "";
+							word += stringLanguageC[i];
+							fileAnalysis << getCodeWord(word) << " ";
+							word = "";
 							continue;
 						}
 
@@ -258,51 +303,50 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 						{
 							if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i + 1]) == false && isDigit((int)stringLanguageC[i + 1]) == false))
 							{
-								
-								temp += stringLanguageC[i];
-								if ((temp == "int" || temp == "float" || temp == "double" || temp == "char") && stringLanguageC[i + 1] == '*')
+								word += stringLanguageC[i];
+								if (isType(word) && stringLanguageC[i + 1] == '*')
 								{
-									temp += stringLanguageC[i + 1];
+									word += stringLanguageC[i + 1];
 									i++;
 								}
-								fileAnalysis << getCodeWord(temp) << " ";
-								temp = "";
+								fileAnalysis << getCodeWord(word) << " ";
+								word = "";
 								continue;
 							}
 							else
 							{
 								if (stringLanguageC[i] == '#')
 								{
-									temp += stringLanguageC[i];
+									word += stringLanguageC[i];
 									continue;
 								}
 
 							}
-							temp += stringLanguageC[i];
+							word += stringLanguageC[i];
 						}
 						else
 						{
-							if (temp == "\0")
+							if (word == "\0")
 								continue;
 							else
 							{
-								fileAnalysis << getCodeWord(temp) << " ";
-								temp = "";
+								fileAnalysis << getCodeWord(word) << " ";
+								word = "";
 							}
 						}
 					}
 					else
 					{
-						temp += stringLanguageC[i];
+						word += stringLanguageC[i];
 					}
 
 				}
-				if (temp != "\0")
+				if (word != "\0")
 				{
 					if (readComment == false)
-						fileAnalysis << getCodeWord(temp);
+						fileAnalysis << getCodeWord(word);
 					else
-						temp += '\n';
+						word += '\n';
 				}
 				if (readComment == false)
 					fileAnalysis << "\n";
@@ -314,6 +358,7 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 	{
 		std::cout << " Exception opening/reading file";
 		std::cout << exep.what();
+		System::Windows::Forms::MessageBox::Show("File don't open", "error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
 	}
 
 	fileC.close();

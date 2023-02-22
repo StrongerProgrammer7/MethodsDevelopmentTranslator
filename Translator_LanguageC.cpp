@@ -25,6 +25,7 @@ void marshalString(String^ s, std::string& std_string)
 	std_string = chars;
 	Marshal::FreeHGlobal(IntPtr((void*)chars));
 }
+
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_loadFile_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	String^ filePathName = "";
@@ -70,17 +71,27 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_
 	{
 		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 	}
-	
 }
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	ReversePolishNotation RPN;
-	std::string file = "";
-	marshalString(tb_nameFileAnylize->Text, file);
-	RPN.reversePolishNotationAnalyze(file, "RPN.txt");
+	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
+	{
+		ReversePolishNotation RPN;
+		std::string file = "";
+		marshalString(tb_nameFileAnylize->Text, file);
+		RPN.reversePolishNotationAnalyze(file, "RPN.txt");
 
-	StreamReader^ fileAnalyze = gcnew StreamReader("RPN.txt", System::Text::Encoding::GetEncoding(1251));//File::OpenText("RPN.txt");
-	tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
-	fileAnalyze->Close();
+		StreamReader^ fileAnalyze = gcnew StreamReader("RPN.txt", System::Text::Encoding::GetEncoding(1251));
+		tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
+		fileAnalyze->Close();
+		btn_analisator->Enabled = false;
+	}
+	else
+	{
+		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	}
+	
+
+	
 }

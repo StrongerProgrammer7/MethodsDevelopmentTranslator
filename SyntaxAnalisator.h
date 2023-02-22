@@ -22,5 +22,7 @@ private:
 	std::string getCodeWordLength_1(std::string word);
 	std::string getCodeWordLengthGreaterOne(std::string word);
 	std::string getCodeWord(std::string word);
+	//bool skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std::ofstream& file, std::string& word);
+	bool skipAnalyzeOneLineComment(bool readComment, std::string line, __int64 index, std::ofstream& file);
 };
 #endif

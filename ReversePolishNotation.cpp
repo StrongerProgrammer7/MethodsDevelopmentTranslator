@@ -616,7 +616,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 	{
 		std::cout << " Exception opening/reading file";
 		std::cout << exep.what();
-		//System::Windows::Forms::MessageBox((std::string)exep.what());
+		System::Windows::Forms::MessageBox::Show("File don't open", "error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
 	}
 
 	lexical.close();

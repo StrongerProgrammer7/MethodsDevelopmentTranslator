@@ -16,4 +16,6 @@ bool isDigit(int const &);
 bool isLetter(int const &);
 bool isLibrary_header(std::string const &);
 bool isNumber(std::string const& num);
+bool isType(std::string const& word);
+bool isIdentifier(std::string const& word);
 #endif

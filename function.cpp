@@ -65,13 +65,34 @@ bool isDigit(int const &elem)
 
 bool isNumber(std::string const &num)
 {
+	if (std::count(num.begin(), num.end(), '.') > 1)
+		return false;
 	for (unsigned int i = 0; i < num.length(); i++)
+	{
+		if (num[i] == '.')
+			continue;
 		if (isDigit((int)num[i]) == false)
 			return false;
+	}
 	return true;
 }
 
 bool isLibrary_header(std::string const &word)
 {
 	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
+}
+
+bool isType(std::string const& word)
+{
+	return word == "int" || word == "float" || word == "double" || word == "char";
+}
+
+bool isIdentifier(std::string const& word)
+{
+	if (word.find('%') != std::string::npos || word.find('-') != std::string::npos || word.find('*') != std::string::npos
+		|| word.find('/') != std::string::npos || word.find('\\') != std::string::npos || word.find('[') != std::string::npos
+		|| word.find(']') != std::string::npos || word.find('(') != std::string::npos || word.find(')') != std::string::npos
+		|| word.find('{') != std::string::npos || word.find('}') != std::string::npos)
+		return false;
+	return true;
 }
