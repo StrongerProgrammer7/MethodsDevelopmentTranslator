@@ -9,5 +9,6 @@
 #include <map>
 #include <stack>
 #include <algorithm>
+#include <sstream>
 
 #endif

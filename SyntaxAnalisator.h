@@ -3,8 +3,7 @@
 #define SYNTAXANALISATOR_H
 
 #include "Translator.h"
-class SyntaxAnalisator :
-	public Translator
+class SyntaxAnalisator : public Translator
 {
 public:
 	SyntaxAnalisator();

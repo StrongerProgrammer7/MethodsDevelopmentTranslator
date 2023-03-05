@@ -30,6 +30,9 @@
     <ClCompile Include="ReversePolishNotation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="translate_csharp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Translator_LanguageC.h">
@@ -50,6 +53,9 @@
     <ClInclude Include="ReversePolishNotation.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="translate_csharp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt">
@@ -59,6 +65,12 @@
       <Filter>Файлы ресурсов</Filter>
     </Text>
     <Text Include="lexical.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="RPN.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="CodeCSharp.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>

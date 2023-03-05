@@ -2,6 +2,7 @@
 #include "function.h"
 #include "SyntaxAnalisator.h"
 #include "ReversePolishNotation.h"
+#include "translate_csharp.h"
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -32,19 +33,20 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_loadFile_Cl
 	if (openFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK)
 	{
 		filePathName = openFileDialog1->FileName;
+		try
+		{
+			StreamReader^ file = File::OpenText(filePathName);
+			tb_textC->Text = file->ReadToEnd();
+			file->Close();
+			marshalString(filePathName, fileText_C);
+			btn_analisator->Enabled = true;
+		}
+		catch (const std::exception&)
+		{
+			MessageBox::Show(this, "File don't open", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
 	}
-	try
-	{
-		StreamReader^ file = File::OpenText(filePathName);
-		tb_textC->Text = file->ReadToEnd();
-		file->Close();
-		marshalString(filePathName, fileText_C);
-		btn_analisator->Enabled = true;
-	}
-	catch (const std::exception&)
-	{
-		MessageBox::Show(this, "File don't open", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-	}
+	
 
 }
 
@@ -92,6 +94,24 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePoli
 		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 	}
 	
+}
 
-	
+System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
+	{
+		Translate_csharp codeCSharp;
+		std::string file = "";
+		marshalString(tb_nameFileAnylize->Text, file);
+		codeCSharp.transalteToCSharp("RPN.txt", "CodeCSharp.txt");
+
+		StreamReader^ fileAnalyze = gcnew StreamReader("CodeCSharp.txt", System::Text::Encoding::GetEncoding(1251));
+		tb_codeCSharp->Text = fileAnalyze->ReadToEnd();
+		fileAnalyze->Close();
+		btn_analisator->Enabled = false;
+	}
+	else
+	{
+		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+	}
 }

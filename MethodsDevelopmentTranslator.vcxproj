@@ -138,6 +138,7 @@
     <ClCompile Include="function.cpp" />
     <ClCompile Include="ReversePolishNotation.cpp" />
     <ClCompile Include="SyntaxAnalisator.cpp" />
+    <ClCompile Include="translate_csharp.cpp" />
     <ClCompile Include="Translator.cpp" />
     <ClCompile Include="Translator_LanguageC.cpp" />
   </ItemGroup>
@@ -146,6 +147,7 @@
     <ClInclude Include="include.h" />
     <ClInclude Include="ReversePolishNotation.h" />
     <ClInclude Include="SyntaxAnalisator.h" />
+    <ClInclude Include="translate_csharp.h" />
     <ClInclude Include="Translator.h" />
     <ClInclude Include="Translator_LanguageC.h">
       <FileType>CppForm</FileType>
@@ -158,7 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt" />
+    <Text Include="CodeCSharp.txt" />
     <Text Include="lexical.txt" />
+    <Text Include="RPN.txt" />
     <Text Include="test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -41,6 +41,9 @@ namespace MethodsDevelopmentTranslator {
 	private: System::Windows::Forms::TextBox^ tb_nameFileAnylize;
 	private: System::Windows::Forms::TextBox^ tb_reversePolishNotation;
 	private: System::Windows::Forms::Button^ btn_reversePolishNotation;
+	private: System::Windows::Forms::TextBox^ tb_codeCSharp;
+
+	private: System::Windows::Forms::Button^ btn_toCSharp;
 
 	protected:
 
@@ -65,6 +68,8 @@ namespace MethodsDevelopmentTranslator {
 			this->tb_nameFileAnylize = (gcnew System::Windows::Forms::TextBox());
 			this->tb_reversePolishNotation = (gcnew System::Windows::Forms::TextBox());
 			this->btn_reversePolishNotation = (gcnew System::Windows::Forms::Button());
+			this->tb_codeCSharp = (gcnew System::Windows::Forms::TextBox());
+			this->btn_toCSharp = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// btn_loadFile
@@ -73,7 +78,7 @@ namespace MethodsDevelopmentTranslator {
 			this->btn_loadFile->Name = L"btn_loadFile";
 			this->btn_loadFile->Size = System::Drawing::Size(208, 23);
 			this->btn_loadFile->TabIndex = 0;
-			this->btn_loadFile->Text = L"Load file";
+			this->btn_loadFile->Text = L"Load file - code C";
 			this->btn_loadFile->UseVisualStyleBackColor = true;
 			this->btn_loadFile->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_loadFile_Click);
 			// 
@@ -145,6 +150,28 @@ namespace MethodsDevelopmentTranslator {
 			this->btn_reversePolishNotation->UseVisualStyleBackColor = true;
 			this->btn_reversePolishNotation->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_reversePolishNotation_Click);
 			// 
+			// tb_codeCSharp
+			// 
+			this->tb_codeCSharp->BackColor = System::Drawing::SystemColors::Info;
+			this->tb_codeCSharp->Font = (gcnew System::Drawing::Font(L"Consolas", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->tb_codeCSharp->Location = System::Drawing::Point(656, 42);
+			this->tb_codeCSharp->Multiline = true;
+			this->tb_codeCSharp->Name = L"tb_codeCSharp";
+			this->tb_codeCSharp->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
+			this->tb_codeCSharp->Size = System::Drawing::Size(286, 393);
+			this->tb_codeCSharp->TabIndex = 7;
+			// 
+			// btn_toCSharp
+			// 
+			this->btn_toCSharp->Location = System::Drawing::Point(695, 13);
+			this->btn_toCSharp->Name = L"btn_toCSharp";
+			this->btn_toCSharp->Size = System::Drawing::Size(208, 23);
+			this->btn_toCSharp->TabIndex = 8;
+			this->btn_toCSharp->Text = L"Get code C#";
+			this->btn_toCSharp->UseVisualStyleBackColor = true;
+			this->btn_toCSharp->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_toCSharp_Click);
+			// 
 			// Translator_LanguageC
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -152,7 +179,9 @@ namespace MethodsDevelopmentTranslator {
 			this->AutoScroll = true;
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::MintCream;
-			this->ClientSize = System::Drawing::Size(807, 452);
+			this->ClientSize = System::Drawing::Size(954, 452);
+			this->Controls->Add(this->btn_toCSharp);
+			this->Controls->Add(this->tb_codeCSharp);
 			this->Controls->Add(this->btn_reversePolishNotation);
 			this->Controls->Add(this->tb_reversePolishNotation);
 			this->Controls->Add(this->tb_nameFileAnylize);
@@ -165,7 +194,7 @@ namespace MethodsDevelopmentTranslator {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::SizableToolWindow;
 			this->Margin = System::Windows::Forms::Padding(4);
 			this->Name = L"Translator_LanguageC";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Translator";
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -175,6 +204,6 @@ namespace MethodsDevelopmentTranslator {
 	private: System::Void Btn_loadFile_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e);
-
+			 System::Void Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

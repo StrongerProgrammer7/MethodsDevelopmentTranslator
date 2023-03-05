@@ -45,25 +45,25 @@ bool ReversePolishNotation::isFunctionDeclaration(std::string line)
 	}
 	return false;
 }
-bool ReversePolishNotation::isTypeDeclaration(std::string word)
-{
-	return word=="W1" || word=="W2" || word=="W3" || word=="W14" || word == "W15" || word == "W16" || word == "W17" || 
-		word=="W18" || word=="W19" || word=="W13" || word == "W19 W1"
-		|| word == "W19 W2" || word == "W19 W3" || word == "W19 W17" || word == "W19 W18" || word == "W19 W16" || word == "W19 W15" ? true : false;
-}
-bool ReversePolishNotation::isCycle(std::string word)
-{
-	return word == "W7" || word == "W12" ? true : false;
-}
-
-bool ReversePolishNotation::isIFCondition(std::string word)
-{
-	return word == "W5" ? true : false;
-}
-bool ReversePolishNotation::isELSECondition(std::string word)
-{
-	return word == "W6" ? true : false;
-}
+//bool ReversePolishNotation::isTypeDeclaration(std::string word)
+//{
+//	return word=="W1" || word=="W2" || word=="W3" || word=="W14" || word == "W15" || word == "W16" || word == "W17" || 
+//		word=="W18" || word=="W19" || word=="W13" || word == "W19 W1"
+//		|| word == "W19 W2" || word == "W19 W3" || word == "W19 W17" || word == "W19 W18" || word == "W19 W16" || word == "W19 W15" ? true : false;
+//}
+//bool ReversePolishNotation::isCycle(std::string word)
+//{
+//	return word == "W7" || word == "W12" ? true : false;
+//}
+//
+//bool ReversePolishNotation::isIFCondition(std::string word)
+//{
+//	return word == "W5" ? true : false;
+//}
+//bool ReversePolishNotation::isELSECondition(std::string word)
+//{
+//	return word == "W6" ? true : false;
+//}
 
 bool ReversePolishNotation::upElemNotNameExpression(std::string upElem)
 {
@@ -166,16 +166,27 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 			{
 				std::string lineLexical = "";
 				getline(lexical, lineLexical);
-				if (lineLexical.length() > 2 && isComment((int)lineLexical[0], (int)lineLexical[1]) && lineLexical.find("*/") == std::string::npos)
-					manyLineComment = true;
-				if (lineLexical.length() > 2 && (isComment((int)lineLexical[0], (int)lineLexical[1]) || isOneStringComment((int)lineLexical[0], (int)lineLexical[1])))
+				if (lineLexical.find("W8") != std::string::npos)
+				{
+					fileAnalysis << lineLexical << std::endl;
 					continue;
+				}
+				if (lineLexical.length() > 2 && (isComment((int)lineLexical[0], (int)lineLexical[1]) || isOneStringComment((int)lineLexical[0], (int)lineLexical[1])))
+				{
+					fileAnalysis << lineLexical << std::endl;
+					continue;
+
+				}
 				if (manyLineComment == true)
 				{
 					if (lineLexical.find("*/") == std::string::npos)
+					{
+						fileAnalysis << lineLexical << std::endl;
 						continue;
+					}
 					else
 					{
+						fileAnalysis << lineLexical << std::endl;
 						manyLineComment = false;
 						continue;
 					}
@@ -209,6 +220,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 						}
 						
 					}
+					//TODO one line comment in expression
 
 					if (token != "R5")
 					{
@@ -222,7 +234,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 							}
 							if (isCycle(stack.back().rbegin()->first) == true && lastCommndIFFORWHILE_withoutTHEN == "Cycle")
 							{
-								fileAnalysis << std::endl << "лж" << stack.back().rbegin()->second << " сок" << " ";
+								fileAnalysis << std::endl << "лжя" << stack.back().rbegin()->second << " сок" << " ";
 								lastCommndIFFORWHILE_withoutTHEN = "End Cycle";
 							}
 						}
@@ -250,8 +262,13 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 					{
 						if (stack.size() == 0)
 						{
+							if (token == "R7")
+								continue;
 							std::map<std::string, int> tempMap;
-							tempMap.insert(std::pair<std::string,int>(token, 0));
+							if (isReadFunctionInExpresiion == false)
+								tempMap.insert(std::pair<std::string, int>(token, 0));
+							else
+								tempMap.insert(std::pair<std::string, int>("т", 1));
 							stack.push_back(tempMap);
 							continue;
 						}
@@ -290,7 +307,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								auto upElemStack = stack.back().rbegin();
 								if (upElemStack->first == "PROC")
 								{
-									fileAnalysis << upElemStack->second << " мо" << " ";
+									fileAnalysis << intToStr(upElemStack->second) << " мо" << " ";
 									continue;
 								}
 								if (isIFCondition(upElemStack->first) == true)
@@ -304,7 +321,12 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								if (isCycle(upElemStack->first)==true)
 								{
 									upElemStack->second++;
-									fileAnalysis << "лж" << upElemStack->second << " сок" << " ";
+									if (upElemStack->first == "W12")
+									{
+										fileAnalysis << "лжя" << upElemStack->second << " сок" << " ";
+									}	
+									else
+										fileAnalysis << "лж" << upElemStack->second << " сок" << " ";
 									if (lastCommndIFFORWHILE_withoutTHEN == "Cycle")
 										lastCommndIFFORWHILE_withoutTHEN = "";
 									continue;
@@ -315,8 +337,13 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								auto upElemStack = stack.back().rbegin();
 								if(isIFCondition(upElemStack->first)==true)
 									fileAnalysis << "л" << upElemStack->second << ":";
-								if(isCycle(upElemStack->first)==true)
-									fileAnalysis << "лж" << upElemStack->second << ":";
+								if (isCycle(upElemStack->first) == true)
+								{
+									if(upElemStack->first=="W12")
+										fileAnalysis << "лжя" << upElemStack->second << ":";
+									else
+										fileAnalysis << "лж" << upElemStack->second << ":";
+								}
 								if (upElemStack->first == "PROC")
 									fileAnalysis << "йо" << std::endl;
 								stack.pop_back();
@@ -329,7 +356,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								{
 									if (isFor == true && upElemStack->first == "R3")
 										break;
-									if (isTypeDeclaration(upElemStack->first) == true)
+									if (isTypeDeclarationByCode(upElemStack->first) == true)
 										fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " ";
 									else
 										fileAnalysis << upElemStack->first << " ";
@@ -342,7 +369,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								{
 									stack.pop_back();
 									upElemStack = stack.back().rbegin();
-									fileAnalysis << upElemStack->second << " йн";
+									fileAnalysis << intToStr(upElemStack->second) << " йн";
 								}
 								if (stack.size() != 0 && isFor==false && lastCommndIFFORWHILE_withoutTHEN.find("End") != std::string::npos)
 								{
@@ -364,7 +391,21 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 							}
 							if (token == "R3")//(
 							{
+								if (isDeclareFunction == true)
+								{
+									while (stack.size() != 0)
+									{
+										auto upElemStack = stack.back().rbegin();
+										if (isTypeDeclarationByCode(upElemStack->first) == true)
+											fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " ";
+										else
+											fileAnalysis << upElemStack->first << " ";
+
+										stack.pop_back();
+									}
+								}
 								std::map<std::string, int> tempMap;
+								
 								if (isReadFunctionInExpresiion == false)
 									tempMap.insert(std::pair<std::string, int>(token, 0));
 								else
@@ -382,7 +423,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								{
 									
 									auto upElemStack = stack.back().rbegin();
-									if (isTypeDeclaration(upElemStack->first)==true)
+									if (isTypeDeclarationByCode(upElemStack->first)==true)
 										fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " ";
 									else
 										fileAnalysis << upElemStack->first << " ";
@@ -394,7 +435,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								if (isReadFunctionInExpresiion == true && stack.size() != 0)
 								{
 									if (stack.size() != 0 && stack.back().rbegin()->first == "т")
-										fileAnalysis << ++stack.back().rbegin()->second << " " << stack.back().rbegin()->first << " ";
+										fileAnalysis << ++stack.back().rbegin()->second << "" << stack.back().rbegin()->first << " ";
 									stack.pop_back();
 									isReadFunctionInExpresiion = isExistsFunctionExpression(stack);
 								}
@@ -405,7 +446,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 									while (stack.size() != 0)
 									{
 										auto upElemStack = stack.back().rbegin();
-										if (isTypeDeclaration(upElemStack->first)==true)
+										if (isTypeDeclarationByCode(upElemStack->first)==true)
 											fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " ";
 										else
 											fileAnalysis << upElemStack->first << " ";
@@ -473,14 +514,11 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 										{
 											while (stack.size() != 0 && upElemStack->first != "R3")
 											{
-												std::string temp = "";
-												if (isTypeDeclaration(upElemStack->first))
-													temp = nameType(upElemStack->first);
-
-												if (temp == "")
-													fileAnalysis << upElemStack->first << " ";
+												if (isTypeDeclarationByCode(upElemStack->first))
+													fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " ";
 												else
-													fileAnalysis << upElemStack->second << temp << " ";
+													fileAnalysis << upElemStack->first << " ";
+
 												stack.pop_back();
 												if (stack.size() != 0)
 													upElemStack = stack.back().rbegin();
@@ -491,7 +529,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 										{
 											while (true)
 											{
-												if (isTypeDeclaration(upElemStack->first))
+												if (isTypeDeclarationByCode(upElemStack->first))
 													break;
 												fileAnalysis << upElemStack->first << " ";
 
@@ -539,7 +577,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								if (stack.size() != 0)
 									upElemStack = stack.back().rbegin();
 							}
-							if (isTypeDeclaration(stack.back().rbegin()->first) == true && isDeclareSomeVarOneType == false)
+							if (stack.size()!=0 && isTypeDeclarationByCode(stack.back().rbegin()->first) == true && isDeclareSomeVarOneType == false)
 							{
 								auto upElemStack = stack.back().rbegin();
 								//fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " "; stack.pop_back();
@@ -547,7 +585,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								{
 									if (isFor == true && upElemStack->first == "R3")
 										break;
-									if (isTypeDeclaration(upElemStack->first) == true)
+									if (isTypeDeclarationByCode(upElemStack->first) == true)
 										fileAnalysis << upElemStack->second << " " << nameType(upElemStack->first) << " ";
 									else
 										fileAnalysis << upElemStack->first << " ";
@@ -582,12 +620,12 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 							token += " " + lineLexical.substr(0, pos);
 							lineLexical.erase(0, pos + 1);
 						}
-						if (isDeclareFunction == true && isTypeDeclaration(token) == true)
+						if (isDeclareFunction == true && isTypeDeclarationByCode(token) == true)
 						{
 							tempMap.insert(std::pair<std::string, int>(token, 1));
 							stack.push_back(tempMap);
 						}else
-							if (isTypeDeclaration(token) == true)
+							if (isTypeDeclarationByCode(token) == true)
 							{
 								if (isDeclareSomeVarOneType==true)
 								{

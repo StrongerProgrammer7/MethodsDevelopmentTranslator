@@ -1,6 +1,6 @@
 //#include "table.h"
 #include <iostream>
-
+#include <string>
 // ( ) [  ]  {  } ;
 bool isSeparators(int const &elem)
 {
@@ -96,3 +96,19 @@ bool isIdentifier(std::string const& word)
 		return false;
 	return true;
 }
+
+std::string intToStr(int num)
+{
+	std::string temp = "";
+	while (num != 0)
+	{
+		int t = num % 10;
+		temp += std::to_string(t) + " ";
+		num /= 10;
+	}
+	temp.erase(temp.length() - 1, 1);
+	reverse(temp.begin(), temp.end());
+	return temp;
+}
+
+

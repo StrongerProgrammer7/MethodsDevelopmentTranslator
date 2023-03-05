@@ -9,6 +9,7 @@ class Translator
 public:
 	Translator();
 	~Translator();
+
 protected:
 #define SIZE_serviceWord 19
 #define SIZE_separators 9
@@ -87,10 +88,10 @@ protected:
 		{"|", 3},
 		// &
 		{"&", 4},
-		// not
-		{"not", 5},
-		// <		>		  <=			>=		==			!=		 &&			||
-		{"O8", 6},{"O7", 6},{"O12", 6},{"O11", 6},{"O9", 6},{"O10", 6},{"O17", 6},{"O18", 6},
+		// not		  &&		||
+		{"not", 5}, {"O17", 5},{"O18", 5},
+		// <		>		  <=			>=		==			!=		 
+		{"O8", 6},{"O7", 6},{"O12", 6},{"O11", 6},{"O9", 6},{"O10", 6},
 		//+			-			++		--		-=			+=			*=		/=
 		{"O1", 7},{"O2", 7},{"O20", 7},{"O19", 7},{"O15", 7},{"O14", 7},{"O16", 7},{"O13", 7},
 		//*			/		%
@@ -98,7 +99,12 @@ protected:
 		// }			return
 		{"R6", 9},{"W11", 9},{"DCL",9}
 	};
-	// INT, FLT, DBL, CHAR, STR
+	bool isTypeDeclarationByCode(std::string code_type);
+	bool isTypeDeclaration(std::string type);
+	bool isCycle(std::string word);
+	bool isIFCondition(std::string word);
+	bool isELSECondition(std::string word);
+	bool isConst(std::string const_type);
 };
 
 #endif

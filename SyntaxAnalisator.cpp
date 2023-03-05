@@ -287,7 +287,7 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 						if (isOperation((int)stringLanguageC[i]) == true || isLogicalSingleOperation((int)stringLanguageC[i]) == true)
 						{
 							if (isIncrement((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true ||
-								isDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1] == true) ||
+								isDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true ||
 								isLogicalDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
 							{
 								word += stringLanguageC[i];
@@ -304,10 +304,13 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 							if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i + 1]) == false && isDigit((int)stringLanguageC[i + 1]) == false))
 							{
 								word += stringLanguageC[i];
-								if (isType(word) && stringLanguageC[i + 1] == '*')
+								if (isType(word) && (stringLanguageC[i + 1] == '*' || stringLanguageC[i + 2] == '*'))
 								{
-									word += stringLanguageC[i + 1];
-									i++;
+									word += '*';
+									if (stringLanguageC[i + 2] == '*')
+										i += 2;
+									else
+										i++;
 								}
 								fileAnalysis << getCodeWord(word) << " ";
 								word = "";

@@ -1,8 +1,8 @@
 W8 I1 
 W8 I2 
 
-I3 I4 1 int 1 int 
-11 мо 
+I3 1 int I4 1 int 
+1 1 мо 
 I5 1 int N1 O5 
 I4 N1 O10 
 лж1 сок 
@@ -12,35 +12,40 @@ I5 O20
 I5 W11 
 йо
 
-I6 I4 1 int 1 int 
-21 мо 
-I7 1 int I3 I4 2 т O5 
-I8 1 int* W9 I7 W10 1 int 2 т O3 2 т 1 int* O5 
+/*test comment*/ 
+I6 1 int I4 1 int 
+2 1 мо 
+I7 1 int I3 I4 2т O5 
+I8 1 int* W9 I7 W10 1 int 2т O3 2т 1 int* O5 
 I9 1 int N1 O5 
 I4 N1 O10 
 лж1 сок 
 I8 I9 2ющл I4 N2 O6 O5 
-I4 O4 N2 O5 
+I4 N2 O13 
 I9 O20 
 лж1:
 I8 W11 
 йо
 
-W4 I10 1int I11 1ющл 1 const char* 1 int 
-31 мо 
-I7 1 int I3 N3 2 т O5 
-1 int I12 O3 I6 N3 2 т O5 
+// Main 
+/* double
+comment 
+*/ 
+W4 1 int I10 1 int I11 1ющл 1 const char* 
+3 1 мо 
+I7 1 int I3 N3 2т O5 
+I12 1 int* I6 N3 2т O5 
 I13 1 int N1 O5 
 I14 1 int N1 O5 I14 I7 O8 I14 O20 
-лж1 сок 
-I14 N4 O8 I14 O17 N1 O7 
+лжя1 сок 
+I14 N4 O8 I14 N1 O7 O17 
 л1 сок
-I15 C1 I14 I12 I14 2ющл 4 т 
+I15 C1 I14 I12 I14 2ющл 4т 
 л1: 
-I13 O1 I12 I14 2ющл O5 
-лж1:
-I15 C2 I13 3 т 
-I16 I12 2 т 
+I13 I12 I14 2ющл O14 
+лжя1:
+I15 C2 I13 3т 
+I16 I12 2т 
 N1 W11 
 йо
 

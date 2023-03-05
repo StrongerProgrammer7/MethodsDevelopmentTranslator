@@ -1,7 +1,7 @@
 int main(int argc, const char* argv[])
 {
 	int size = sizeNumber(36);
-	int* digitsNumber = setDigitNumber(36);
+	int *digitsNumber = setDigitNumber(36);
 	int sum7Digit7 = 0;
 	for (int i = 0; i < size; i++)
 	{
