@@ -21,6 +21,7 @@ private:
 	bool isBeginFunctionName(std::string word);
 	bool isExistsFunctionExpression(std::vector<std::map<std::string, int>>& stack);
 	bool isEmptyArray(std::string line);
+	void recordFileFromStack(std::ofstream& file, std::map<std::string, int>::reverse_iterator upElemStack);
 	
 };
 

@@ -51,7 +51,6 @@ protected:
 		{"}","R6"},
 		{";","R7"},
 		{",","R8"},
-		//{"*","R9"},
 		{"","R9"}
 	};
 	std::string const operations[SIZE_operation][SIZE_columns] =
@@ -112,7 +111,12 @@ protected:
 	bool isELSECondition(std::string word);
 	bool isConst(std::string const_type);
 	std::string nameType(std::string token);
-	std::string Translator::fillTable(std::string str, std::map<std::string, std::string>& table, int numTable);
+	std::string fillTable(std::string str, std::map<std::string, std::string>& table, int numTable);
+	std::string getServiceWord(std::string str, bool get_code);
+	std::string getSeparators(std::string str,bool get_code);
+	std::string getOperations(std::string str,bool get_code);
+	std::string getCodeByName(std::map<std::string, std::string>& table, std::string str);
+	std::string getNameByCode(std::map<std::string, std::string>& table, std::string code);
 };
 
 #endif

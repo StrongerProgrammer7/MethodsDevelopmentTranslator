@@ -11,31 +11,6 @@ Translate_csharp::~Translate_csharp()
 {
 }
 
-std::string Translate_csharp::getSymbolOperationByCode(std::string sign)
-{
-	for (int i = 0; i < SIZE_operation; i++)
-		if (operations[i][1] == sign)
-			return operations[i][0];
-	return "";
-}
-
-std::string Translate_csharp::getNameServiceWordByCode( std::string service)
-{
-	for (int i = 0; i < SIZE_serviceWord; i++)
-		if (serviceWord[i][1] == service)
-			return serviceWord[i][0];
-	return "";
-}
-
-std::string Translate_csharp::getNameByCode(std::map<std::string, std::string>& table, std::string code)
-{
-	std::map <std::string, std::string> ::iterator it = table.begin();
-	for (; it!= table.end(); it++)
-		if (it->second==code)
-			return it->first;
-	return "";
-}
-
 
 std::string Translate_csharp::reverseExpression(std::string expression)
 {
@@ -133,34 +108,48 @@ std::string Translate_csharp::correctCycleFor(std::string for_line)
 	return temp;
 }
 
-std::string Translate_csharp::replaceCodeToName(std::string line,char name)
+std::string Translate_csharp::replaceCodeToName(std::string line,char const& name)
 {
 	std::string toReplace = "";
 	if (name != 'W' && name != 'I' && name != 'N' && name != 'C')
 		return line;
 
-	//while (line.find(name) != std::string::npos)
-	//{
-		size_t pos = 0, posEnd = 0;
-		pos = line.find(name);
-		posEnd = line.find(" ", pos);
-		toReplace = line.substr(pos, posEnd);
-		std::string num = "";
-		if (name == 'I')
-			num = getNameByCode(identifier, toReplace);
+	size_t pos = 0, posEnd = 0;
+	pos = line.find(name);
+	posEnd = line.find(" ", pos);
+	toReplace = line.substr(pos, posEnd);
+	std::string num = "";
+	if (name == 'I')
+		num = getNameByCode(identifier, toReplace);
+	else
+		if (name == 'W')
+			num = getServiceWord(toReplace,false);
 		else
-			if (name == 'W')
-				num = getNameServiceWordByCode(toReplace);
+			if (name == 'N')
+				num = getNameByCode(numberConst, toReplace);
 			else
-				if (name == 'N')
-					num = getNameByCode(numberConst, toReplace);
-				else
-					num = getNameByCode(symbolsConst, toReplace);
-		if(num!="")
-			line.replace(pos, toReplace.length(), num);
-	//}
+				num = getNameByCode(symbolsConst, toReplace);
+	if(num!="")
+		line.replace(pos, toReplace.length(), num);
 	return line;
 }
+
+void replacePercentAtTheCurclyBracketWithNum(std::string& print)
+{
+	int num = 0;
+	do
+	{
+		size_t pos = 0;
+		pos = print.find("%d");
+		if (pos == std::string::npos)
+			pos = print.find("%f");
+		if (pos == std::string::npos)
+			break;
+		print.replace(pos, 2, "{" + std::to_string(num) + "}");
+		num++;
+	} while (true);
+}
+
 std::string Translate_csharp::replaceCodeToName(std::string line)
 {
 	size_t pos = 0;
@@ -196,7 +185,7 @@ std::string Translate_csharp::replaceCodeToName(std::string line)
 			{
 				for (int j = i + 1; j < line.length() - 1; j++)
 				{
-					if (line[j] == ' ' || isLetter(line[j]) )//|| isSeparators(line[j + 1]) == false)
+					if (line[j] == ' ' || isLetter(line[j]) )
 						break;
 					if (isSeparators(line[j]))
 						line_name += line[j];
@@ -215,12 +204,13 @@ std::string Translate_csharp::replaceCodeToName(std::string line)
 					i = j;
 				}
 			}
+			replacePercentAtTheCurclyBracketWithNum(line_name);
 		}
 		line_name += ")";
 		return line_name;
 	}
-	
 }
+
 
 std::string Translate_csharp::replaceMalloc(std::string const& line)
 {
@@ -252,7 +242,18 @@ std::string Translate_csharp::replaceMalloc(std::string const& line)
 	return temp;
 }
 
-
+void Translate_csharp::replaceTypeToTypeArrayFunction(std::string& block_function)
+{
+	size_t pos = block_function.find(" ") + 1;
+	pos = block_function.find(" ", pos);
+	std::string tempSeparator = "[] ", tempStar = "*";
+	block_function.replace(pos, tempStar.length(), tempSeparator);
+	nameArrayForReturn = "";
+	std::string temp = block_function.substr(0, block_function.find("(") + 1);
+	pos = temp.rfind("(");
+	size_t posEnd = temp.rfind(" ", pos) + 1;
+	nameFunctionReturnArray = temp.substr(posEnd, pos - posEnd);
+}
 
 void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string fileName_CSharp)
 {
@@ -290,7 +291,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 				}
 				if (lineRPN.find("W4") != std::string::npos)
 				{
-					//fileAnalysis << "\t\tstatic void Main(string[] args)\n\t\t{\n";
 					block_function += "\t\tstatic void Main(string[] args)\n\t\t{\n";
 					mainFunctionRecorded = true;
 					continue;
@@ -300,7 +300,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					if (lineForRecordInFile.length() != 0)
 					{
 						lineForRecordInFile.erase(lineForRecordInFile.rfind(" "), 1);
-						//fileAnalysis << "\t\t\t" << lineForRecordInFile << ";" << std::endl;
 						block_function += "\t\t\t" + lineForRecordInFile + ";\n";
 						lineForRecordInFile = "";
 					}
@@ -312,7 +311,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					if (lineForRecordInFile.length() != 0)
 					{
 						lineForRecordInFile.erase(lineForRecordInFile.rfind(" "), 1);
-						//fileAnalysis << "\t\t\t" << lineForRecordInFile << ";" << std::endl;
 						block_function += "\t\t\t" + lineForRecordInFile + ";\n";
 						lineForRecordInFile = "";
 					}
@@ -324,19 +322,9 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					lineRPN = reverseExpression(lineRPN);
 					lineRPN = replaceCodeToName(lineRPN);
 					lineRPN.erase(lineRPN.rfind(" "), 1);
-					//fileAnalysis << "\t\t\t" << lineRPN << ";" << std::endl;
 					if (nameArrayForReturn!= "" && lineRPN.find(nameArrayForReturn) != std::string::npos)
-					{
-						size_t pos = block_function.find(" ")+1;
-						pos = block_function.find(" ", pos);
-						std::string tempSeparator = "[] ",tempStar="*";
-						block_function.replace(pos, tempStar.length(), tempSeparator);
-						nameArrayForReturn = "";
-						std::string temp = block_function.substr(0, block_function.find("(")+1);
-						pos = temp.rfind("(");
-						size_t posEnd = temp.rfind(" ", pos) + 1;
-						nameFunctionReturnArray = temp.substr(posEnd, pos - posEnd);
-					}
+						replaceTypeToTypeArrayFunction(block_function);
+
 					block_function += "\t\t\t" + lineRPN + ";\n";
 					continue;
 				}
@@ -345,24 +333,14 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 				if (lineRPN.length() > 2 && (isComment((int)lineRPN[0], (int)lineRPN[1]) || isOneStringComment((int)lineRPN[0], (int)lineRPN[1])))
 				{
 					fileAnalysis << lineRPN << std::endl;
-					///block_function += lineRPN + "\n";
 					continue;
 				}
 				if (manyLineComment == true)
 				{
-					if (lineRPN.find("*/") == std::string::npos)
-					{
-						fileAnalysis << lineRPN << std::endl;
-						//block_function += lineRPN + "\n";
-						continue;
-					}
-					else
-					{
-						fileAnalysis << lineRPN << std::endl;
-						//block_function += lineRPN + "\n";
+					fileAnalysis << lineRPN << std::endl;
+					if (lineRPN.find("*/") != std::string::npos)
 						manyLineComment = false;
-						continue;
-					}
+					continue;
 				}
 
 				if (lineRPN.find("мо") != std::string::npos)
@@ -371,8 +349,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 						continue;
 					lineForRecordInFile = reverseExpression(lineForRecordInFile);
 					lineForRecordInFile = declareFunction(lineForRecordInFile);
-					//fileAnalysis << lineForRecordInFile << std::endl;
-					//fileAnalysis << "\t\t{\n";
 					block_function += lineForRecordInFile + "\n\t\t{\n";
 					lineForRecordInFile = "";
 					continue;
@@ -405,8 +381,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 								else
 									lineForRecordInFile = declareCondition(lineForRecordInFile, "if");
 
-							//fileAnalysis << "\t\t\t" << lineForRecordInFile << std::endl;
-							//fileAnalysis << "\t\t\t{\n";
 							block_function += "\t\t\t" + lineForRecordInFile + "\n\t\t\t{\n";
 							lineForRecordInFile = "";
 							continue;
@@ -423,11 +397,11 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 								lineForRecordInFile = replaceMalloc(lineForRecordInFile);
 
 							if (lineForRecordInFile != "")
-								block_function += "\t\t\t\t" + lineForRecordInFile + ";\n";//fileAnalysis << "\t\t\t\t" << lineForRecordInFile << ";\n";
+								block_function += "\t\t\t\t" + lineForRecordInFile + ";\n";
 
 							lineForRecordInFile = "";
 							block_function += "\t\t\t}\n";
-							//fileAnalysis << "\t\t\t}\n";
+
 							continue;
 						}
 						
@@ -445,7 +419,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 								
 							lineForRecordInFile.erase(lineForRecordInFile.rfind(" "), 1);
 							block_function += "\t\t\t" + lineForRecordInFile + ";\n";
-							//fileAnalysis << "\t\t\t" << lineForRecordInFile << ";" << std::endl;
 							lineForRecordInFile = "";
 						}
 						
@@ -511,15 +484,15 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					{
 						lineForRecordInFile = stack.top();
 						
-						if (getSymbolOperationByCode(token) == "++" || getSymbolOperationByCode(token) == "--")
+						if (getOperations(token,false) == "++" || getOperations(token,false) == "--")
 						{
-							lineForRecordInFile += getSymbolOperationByCode(token) + " ";
+							lineForRecordInFile += getOperations(token,false) + " ";
 							lineForRecordInFile = reverseExpression(lineForRecordInFile);
 						}
 						else
 						{
 							lineForRecordInFile += " ";
-							lineForRecordInFile += getSymbolOperationByCode(token) + " ";
+							lineForRecordInFile += getOperations(token,false) + " ";
 						}
 
 						stack.pop();
@@ -582,6 +555,8 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					lineForRecordInFile.replace(pos, 1, "[]");
 				}
 			}
+			if(block_function!="")
+				fileAnalysis << block_function;
 		}
 	
 	}

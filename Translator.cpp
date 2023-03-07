@@ -49,7 +49,7 @@ bool Translator::isOneStringComment(int const& slash, int const& slash2)
 }
 bool Translator::isConst(std::string const_type)
 {
-	return const_type == "const" ? true : false;
+	return const_type == "const" || const_type == "W19" ? true : false;
 }
 bool Translator::isCycle(std::string word)
 {
@@ -73,24 +73,54 @@ std::string Translator::nameType(std::string token)
 		token.erase(0, 4);
 		isConst = true;
 	}
-	for (int i = 0; i < SIZE_serviceWord; i++)
-		if (serviceWord[i][1] == token)
-			if (isConst ==true)
-				return "const " + serviceWord[i][0];
-			else
-				return serviceWord[i][0];
-	return "";
+	if (isConst == true)
+		return "const " + getServiceWord(token, false);
+	else
+		return getServiceWord(token, false);
 }
 
+std::string Translator::getServiceWord(std::string str,bool get_code)
+{
+	int number = get_code;
+	for (int i = 0; i < SIZE_serviceWord; i++)
+		if (serviceWord[i][!number] == str)
+			return serviceWord[i][number];
+	return "\0";
+}
+
+std::string Translator::getOperations(std::string str, bool get_code)
+{
+	int number = get_code;
+	for (int i = 0; i < SIZE_operation; i++)
+		if (operations[i][!number] == str)
+			return operations[i][number];
+	return "\0";
+}
+std::string Translator::getSeparators(std::string str, bool get_code)
+{
+	int number = get_code;
+	for (int i = 0; i < SIZE_separators; i++)
+		if (separators[i][!number] == str)
+			return separators[i][number];
+	return "\0";
+}
+std::string Translator::getNameByCode(std::map<std::string, std::string>& table, std::string code)
+{
+	for(const auto& item : table) 
+		if (item.second == code)
+			return item.first;
+	return "\0";
+}
+std::string Translator::getCodeByName(std::map<std::string, std::string>& table,std::string str)
+{
+	for (const auto& word : table)
+		if (word.first == str)
+			return word.second;
+	return "\0";
+}
 
 std::string Translator::fillTable(std::string str, std::map<std::string, std::string>& table, int numTable)
 {
-	/*int indexCode = 0;
-	for (const auto& word : table)
-	{
-		indexCode++;
-	}
-	indexCode++;*/
 	if (numTable == 1)
 	{
 		if (isIdentifier(str) == true)

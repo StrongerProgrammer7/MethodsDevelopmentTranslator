@@ -17,12 +17,10 @@ private:
 	std::string declareFunctionExpression(std::string line,int countArg);
 	std::string strArray(std::string line);
 	std::string correctCycleFor(std::string for_line);
-	std::string getSymbolOperationByCode(std::string sign);
-	std::string getNameServiceWordByCode(std::string service);
-	std::string getNameByCode(std::map<std::string, std::string>& table, std::string code);
-	std::string replaceCodeToName(std::string line, char name);
+	std::string replaceCodeToName(std::string line, char const& name);
 	std::string replaceCodeToName(std::string line);
 	std::string replaceMalloc(std::string const& line);
+	void replaceTypeToTypeArrayFunction(std::string& block_function);
 
 };
 

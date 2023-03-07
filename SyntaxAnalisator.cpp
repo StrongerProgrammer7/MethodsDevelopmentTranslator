@@ -12,55 +12,6 @@ SyntaxAnalisator::~SyntaxAnalisator()
 }
 
 
-
-std::string SyntaxAnalisator::getServiceWordCode(std::string str)
-{
-	for (int i = 0; i < SIZE_serviceWord; i++)
-		if (serviceWord[i][0] == str)
-			return serviceWord[i][1];
-	return "\0";
-}
-
-std::string SyntaxAnalisator::getOperationsCode(std::string str)
-{
-	for (int i = 0; i < SIZE_operation; i++)
-		if (operations[i][0] == str)
-			return operations[i][1];
-	return "\0";
-}
-
-std::string SyntaxAnalisator::getSeparatorsCode(std::string str)
-{
-	for (int i = 0; i < SIZE_separators; i++)
-		if (separators[i][0] == str)
-			return separators[i][1];
-	return "\0";
-}
-
-std::string SyntaxAnalisator::getIdentifierCode(std::string str)
-{
-	for (const auto& word : identifier)
-		if (word.first == str)
-			return word.second;
-	return "\0";
-}
-
-std::string SyntaxAnalisator::getNumberConstCode(std::string str)
-{
-	for (const auto& word : numberConst)
-		if (word.first == str)
-			return word.second;
-	return "\0";
-}
-
-std::string SyntaxAnalisator::getSymbolsConstCode(std::string str)
-{
-	for (const auto& word : symbolsConst)
-		if (word.first == str)
-			return word.second;
-	return "\0";
-}
-
 System::String^ StlWStringToString(std::string const& os)
 {
 	System::String^ str = gcnew System::String(os.c_str());
@@ -97,17 +48,17 @@ std::string SyntaxAnalisator::getCodeWordLength_1(std::string word)
 	switch (checkStringSingleElem(word))
 	{
 	case 1:
-		if (getNumberConstCode(word) == "\0")
+		if (getCodeByName(numberConst,word) == "\0")
 			addCode(word, numberConst, 2);
-		return getNumberConstCode(word);
+		return getCodeByName(numberConst, word);
 	case 2:
-		return getOperationsCode(word);
+		return getOperations(word,true);
 	case 3:
-		return getSeparatorsCode(word);
+		return getSeparators(word,true);
 	case 4:
-		if (getIdentifierCode(word) == "\0")
+		if (getCodeByName(identifier,word) == "\0")
 			addCode(word, identifier, 1);
-		return getIdentifierCode(word);
+		return getCodeByName(identifier, word);
 	default:
 		return "";
 	}
@@ -116,16 +67,16 @@ std::string SyntaxAnalisator::getCodeWordLength_1(std::string word)
 
 std::string SyntaxAnalisator::getCodeWordLengthGreaterOne(std::string word)
 {
-	std::string code = getServiceWordCode(word);
+	std::string code = getServiceWord(word,true);
 	if (code == "\0")
-		code = getOperationsCode(word);
+		code = getOperations(word,true);
 	if (code == "\0")
 	{
 		if (isNumber(word) == true)
 		{
-			if (getNumberConstCode(word) == "\0")
+			if (getCodeByName(numberConst, word) == "\0")
 				addCode(word, numberConst, 2);
-			return getNumberConstCode(word);
+			return getCodeByName(numberConst, word);
 		}
 		else
 		{
@@ -133,14 +84,14 @@ std::string SyntaxAnalisator::getCodeWordLengthGreaterOne(std::string word)
 			{
 				if (isLibrary_header(word) == false)
 				{
-					if (getSymbolsConstCode(word) == "\0")
+					if (getCodeByName(symbolsConst, word) == "\0")
 						addCode(word, symbolsConst, 3);
-					return getSymbolsConstCode(word);
+					return getCodeByName(symbolsConst, word);
 				}
 			}
-			if (getIdentifierCode(word) == "\0")
+			if (getCodeByName(identifier, word) == "\0")
 				addCode(word, identifier, 1);
-			return getIdentifierCode(word);
+			return getCodeByName(identifier, word);
 		}
 	}
 	else
@@ -348,8 +299,5 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 	fileAnalysis.close();
 }
 
-void SyntaxAnalisator::initialize()
-{
-}
 
 

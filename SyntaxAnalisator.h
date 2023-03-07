@@ -10,14 +10,7 @@ public:
 	SyntaxAnalisator();
 	~SyntaxAnalisator();
 	void analyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis);
-	void initialize();
 private:
-	std::string getServiceWordCode(std::string str);
-	std::string getOperationsCode(std::string str);
-	std::string getSeparatorsCode(std::string str);
-	std::string getIdentifierCode(std::string str);
-	std::string getNumberConstCode(std::string str);
-	std::string getSymbolsConstCode(std::string str);
 	void addCode(std::string str, std::map<std::string, std::string>& table, int numTable);
 	int checkStringSingleElem(std::string const& word);
 	std::string getCodeWordLength_1(std::string word);

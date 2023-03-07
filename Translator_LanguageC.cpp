@@ -106,9 +106,9 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_toCSharp_Cl
 		codeCSharp.initialize(RPN.getIdentifier(), RPN.getNumbers(), RPN.getSymbols());
 		std::string file = "";
 		marshalString(tb_nameFileAnylize->Text, file);
-		codeCSharp.transalteToCSharp("RPN.txt", "CodeCSharp.txt");
+		codeCSharp.transalteToCSharp("RPN.txt", "CodeCSharp.cs");
 
-		StreamReader^ fileAnalyze = gcnew StreamReader("CodeCSharp.txt", System::Text::Encoding::GetEncoding(1251));
+		StreamReader^ fileAnalyze = gcnew StreamReader("CodeCSharp.cs", System::Text::Encoding::GetEncoding(1251));
 		tb_codeCSharp->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
