@@ -67,14 +67,8 @@ bool Translator::isELSECondition(std::string word_code)
 
 std::string Translator::nameType(std::string token)
 {
-	bool isConst = false;
-	if (token.length() > 3)
-	{
-		token.erase(0, 4);
-		isConst = true;
-	}
-	if (isConst == true)
-		return "const " + getServiceWord(token, false);
+	if (token.find("W19")!=std::string::npos)
+		return "const " + getServiceWord(token.erase(0,4), false);
 	else
 		return getServiceWord(token, false);
 }

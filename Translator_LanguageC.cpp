@@ -3,6 +3,7 @@
 #include "SyntaxAnalisator.h"
 #include "ReversePolishNotation.h"
 #include "translate_csharp.h"
+#include <direct.h>
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -44,6 +45,8 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_loadFile_Cl
 			file->Close();
 			marshalString(filePathName, fileText_C);
 			btn_analisator->Enabled = true;
+			mkdir("translator_file");
+			
 		}
 		catch (const std::exception&)
 		{
@@ -61,12 +64,11 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_
 {
 	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text)==true)
 	{
-		
 		std::string fileName = "";
 		marshalString(tb_nameFileAnylize->Text, fileName);
-		analisator.analyze(fileText_C, fileName);
+		analisator.analyze(fileText_C, "./translator_file/lexical.txt");
 		
-		StreamReader^ fileAnalyze = File::OpenText(tb_nameFileAnylize->Text);
+		StreamReader^ fileAnalyze = File::OpenText("./translator_file/lexical.txt");
 		tb_syntaxAnalisator->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
@@ -81,13 +83,12 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePoli
 {
 	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
 	{
-		
 		RPN.initialize(analisator.getIdentifier(), analisator.getNumbers(), analisator.getSymbols());
-		std::string file = "";
-		marshalString(tb_nameFileAnylize->Text, file);
-		RPN.reversePolishNotationAnalyze(file, "RPN.txt");
+		/*std::string file = "";
+		marshalString(tb_nameFileAnylize->Text, file);*/
+		RPN.reversePolishNotationAnalyze("./translator_file/lexical.txt", "./translator_file/RPN.txt");
 
-		StreamReader^ fileAnalyze = gcnew StreamReader("RPN.txt", System::Text::Encoding::GetEncoding(1251));
+		StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/RPN.txt", System::Text::Encoding::GetEncoding(1251));
 		tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
@@ -105,10 +106,9 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_toCSharp_Cl
 	{
 		codeCSharp.initialize(RPN.getIdentifier(), RPN.getNumbers(), RPN.getSymbols());
 		std::string file = "";
-		marshalString(tb_nameFileAnylize->Text, file);
-		codeCSharp.transalteToCSharp("RPN.txt", "CodeCSharp.cs");
+		codeCSharp.transalteToCSharp("./translator_file/RPN.txt", "./translator_file/CodeCSharp.cs");
 
-		StreamReader^ fileAnalyze = gcnew StreamReader("CodeCSharp.cs", System::Text::Encoding::GetEncoding(1251));
+		StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/CodeCSharp.cs", System::Text::Encoding::GetEncoding(1251));
 		tb_codeCSharp->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
