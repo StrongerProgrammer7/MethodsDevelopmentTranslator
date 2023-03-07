@@ -205,5 +205,6 @@ namespace MethodsDevelopmentTranslator {
 			 System::Void Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e);
+
 };
 }

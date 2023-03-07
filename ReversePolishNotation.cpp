@@ -45,25 +45,6 @@ bool ReversePolishNotation::isFunctionDeclaration(std::string line)
 	}
 	return false;
 }
-//bool ReversePolishNotation::isTypeDeclaration(std::string word)
-//{
-//	return word=="W1" || word=="W2" || word=="W3" || word=="W14" || word == "W15" || word == "W16" || word == "W17" || 
-//		word=="W18" || word=="W19" || word=="W13" || word == "W19 W1"
-//		|| word == "W19 W2" || word == "W19 W3" || word == "W19 W17" || word == "W19 W18" || word == "W19 W16" || word == "W19 W15" ? true : false;
-//}
-//bool ReversePolishNotation::isCycle(std::string word)
-//{
-//	return word == "W7" || word == "W12" ? true : false;
-//}
-//
-//bool ReversePolishNotation::isIFCondition(std::string word)
-//{
-//	return word == "W5" ? true : false;
-//}
-//bool ReversePolishNotation::isELSECondition(std::string word)
-//{
-//	return word == "W6" ? true : false;
-//}
 
 bool ReversePolishNotation::upElemNotNameExpression(std::string upElem)
 {
@@ -108,44 +89,6 @@ size_t ReversePolishNotation::positionTypeConversion(std::string line)
 		return line.find("R3 W17 R4", 0);
 	return -1;
 }
-
-std::string ReversePolishNotation::nameType(std::string token)
-{
-	if (token == "W1")
-		return "int";
-	if (token == "W2")
-		return "float";
-	if (token == "W3")
-		return "char";
-	if (token == "W14")
-		return "double";
-	if (token == "W15")
-		return "int*";
-	if (token == "W16")
-		return "float*";
-	if (token == "W17")
-		return "double*";
-	if (token == "W18")
-		return "char*";
-	if (token == "W19 W1")
-		return "const int";
-	if (token == "W19 W2")
-		return "const float";
-	if (token == "W19 W3")
-		return "const char";
-	if (token == "W19 W14")
-		return "const double";
-	if (token == "W19 W15")
-		return "const int*";
-	if (token == "W19 W16")
-		return "const float*";
-	if (token == "W19 W17")
-		return "const double*";
-	if (token == "W19 W18")
-		return "const char*";
-	return "";
-}
-
 
 void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_lexical, std::string fileName_RPN)
 {
@@ -307,7 +250,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								auto upElemStack = stack.back().rbegin();
 								if (upElemStack->first == "PROC")
 								{
-									fileAnalysis << intToStr(upElemStack->second) << " мо" << " ";
+									fileAnalysis << intToStrWithSpace(upElemStack->second) << " мо" << " ";
 									continue;
 								}
 								if (isIFCondition(upElemStack->first) == true)
@@ -369,7 +312,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								{
 									stack.pop_back();
 									upElemStack = stack.back().rbegin();
-									fileAnalysis << intToStr(upElemStack->second) << " йн";
+									fileAnalysis << intToStrWithSpace(upElemStack->second) << " йн";
 								}
 								if (stack.size() != 0 && isFor==false && lastCommndIFFORWHILE_withoutTHEN.find("End") != std::string::npos)
 								{
@@ -660,4 +603,3 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 	lexical.close();
 	fileAnalysis.close();
 }
-

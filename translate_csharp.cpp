@@ -18,14 +18,8 @@ std::string Translate_csharp::getSymbolOperationByCode(std::string sign)
 			return operations[i][0];
 	return "";
 }
-std::string Translate_csharp::getSymbolSeparatorsByCode(std::string separator)
-{
-	for (int i = 0; i < SIZE_separators; i++)
-		if (separators[i][1] == separator)
-			return separators[i][0];
-	return "";
-}
-std::string Translate_csharp::getSymbolServiceWordByCode( std::string service)
+
+std::string Translate_csharp::getNameServiceWordByCode( std::string service)
 {
 	for (int i = 0; i < SIZE_serviceWord; i++)
 		if (serviceWord[i][1] == service)
@@ -33,7 +27,7 @@ std::string Translate_csharp::getSymbolServiceWordByCode( std::string service)
 	return "";
 }
 
-std::string Translate_csharp::getSymbolConst_Identifier_ByCode(std::map<std::string, std::string>& table, std::string code)
+std::string Translate_csharp::getNameByCode(std::map<std::string, std::string>& table, std::string code)
 {
 	std::map <std::string, std::string> ::iterator it = table.begin();
 	for (; it!= table.end(); it++)
@@ -41,6 +35,7 @@ std::string Translate_csharp::getSymbolConst_Identifier_ByCode(std::map<std::str
 			return it->first;
 	return "";
 }
+
 
 std::string Translate_csharp::reverseExpression(std::string expression)
 {
@@ -59,25 +54,40 @@ std::string Translate_csharp::declareFunction(std::string line)
 	size_t pos = 0;
 	int i = 0;
 	std::string declare = "\tpublic ";
-	line.erase(line.rfind(" "), 1);
+	if(isSpaceInEndString(line))
+		line.erase(line.rfind(" "), 1);
 	while ((pos = line.find(' ')) != std::string::npos || line.length() != 0)
 	{
 		if (i == 2)
-			return declare += "(" + line + ")";
-
+			break;
 		declare += line.substr(0, pos) + " ";
-		i++;
 		line.erase(0, pos + 1);
+		i++;
 	}
+
+	declare += "(" + line + ")";
+	declare.erase(declare.find("(") - 1, 1);
 	return declare;
 
 }
-std::string Translate_csharp::declareFunctionExpression(std::string line)
+std::string Translate_csharp::declareFunctionExpression(std::string line,int countArg)
 {
 	line.erase(line.rfind(" "), 1);
+	if (isSpaceInEndString(line))
+		line.erase(line.rfind(" "), 1);
 	std::string temp = line.substr(0, line.find(" "));
 	line.erase(0, line.find(" ") + 1);
-	temp += "(" + line +") ";
+	temp += "(";
+	if (countArg > 2)
+		while (line.length() != 0)
+			if (line.find(" ") != std::string::npos)
+			{
+				temp += line.substr(0, line.find(" ")) + ",";
+				line.erase(0, line.find(" ") + 1);
+			}
+			else
+				break;
+	temp += line + ")";
 	return temp;
 }
 
@@ -93,7 +103,10 @@ std::string Translate_csharp::strArray(std::string line)
 std::string Translate_csharp::declareCondition(std::string line,std::string nameCondition)
 {
 	line.erase(line.rfind(" "), 1);
-	return nameCondition +"(" + line + ")";
+	if (nameCondition == "for")
+		return correctCycleFor(nameCondition + "(" + line + ")");
+	else
+		return nameCondition +"(" + line + ")";
 }
 
 std::string Translate_csharp::correctCycleFor(std::string for_line)
@@ -103,7 +116,6 @@ std::string Translate_csharp::correctCycleFor(std::string for_line)
 	for_line.erase(0, for_line.find(" ") + 1);
 	while (for_line.length() != 0)
 	{
-		
 		if (countSpace == 3)
 		{
 			temp += ";";
@@ -120,6 +132,91 @@ std::string Translate_csharp::correctCycleFor(std::string for_line)
 	return temp;
 }
 
+std::string Translate_csharp::replaceCodeToName(std::string line,char name)
+{
+	std::string toReplace = "";
+	if (name != 'W' && name != 'I' && name != 'N' && name != 'C')
+		return line;
+
+	//while (line.find(name) != std::string::npos)
+	//{
+		size_t pos = 0, posEnd = 0;
+		pos = line.find(name);
+		posEnd = line.find(" ", pos);
+		toReplace = line.substr(pos, posEnd);
+		std::string num = "";
+		if (name == 'I')
+			num = getNameByCode(identifier, toReplace);
+		else
+			if (name == 'W')
+				num = getNameServiceWordByCode(toReplace);
+			else
+				if (name == 'N')
+					num = getNameByCode(numberConst, toReplace);
+				else
+					num = getNameByCode(symbolsConst, toReplace);
+		if(num!="")
+			line.replace(pos, toReplace.length(), num);
+	//}
+	return line;
+}
+std::string Translate_csharp::replaceCodeToName(std::string line)
+{
+	size_t pos = 0;
+	std::string line_name = "";
+	if (line.find("printf") == std::string::npos)
+	{
+		while ((pos = line.find(' ')) != std::string::npos || line.length() != 0)
+		{
+			std::string token = "";
+			if (pos == std::string::npos)
+			{
+				token = line.substr(0, line.length());
+				line = "";
+			}
+			else
+			{
+				token = line.substr(0, pos);
+				line.erase(0, pos + 1);
+			}
+			line_name += replaceCodeToName(token, token[0]) + " ";
+		}
+		return line_name;
+	}
+	else
+	{
+		line_name = "Console.WriteLine(";
+		line.erase(0, line.find("(") + 1);
+		for (int i = 0; i < line.length() - 1; i++)
+		{
+			if (line[i] == ',' || isSeparators(line[i])==true)
+				line_name += line[i];
+			if ((line[i] == 'N' || line[i] == 'C' || line[i] == 'W' || line[i] == 'I') && isLetter((int)line[i + 1]) == false)
+			{
+				for (int j = i + 1; j < line.length() - 1; j++)
+				{
+					if (line[j] == ' ' || isLetter(line[j]) || isSeparators(line[j + 1]) == false)
+						break;
+					if (isSeparators(line[j]))
+						line_name += line[j];
+					if (isDigit(line[j]) && (isDigit(line[j + 1]) || line[j + 1] == ' ' || line[j+1] == ',' || isSeparators(line[j+1])))
+					{
+						int count = 1;
+						if (isDigit(line[j + 1]))
+							count++;
+						std::string temp = line.substr(i, count+1);
+						line_name += replaceCodeToName(temp,temp[0]);
+						
+					}
+					i = j;
+				}
+			}
+		}
+		line_name += ")";
+		return line_name;
+	}
+	
+}
 
 void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string fileName_CSharp)
 {
@@ -132,7 +229,7 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 		fileAnalysis << "using System;" << std::endl;
 		fileAnalysis << "\n namespace from_C_to_C_Sharp\n{\n\tclass Program\n\t{\n\t";
 		rpn.open(fileName_RPN);
-	
+		bool isPrint = false;
 		if (rpn.is_open())
 		{
 			bool readComment = false;
@@ -148,7 +245,8 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					continue;
 				if (lineRPN.find("W8") != std::string::npos)
 				{
-					fileAnalysis << "//" + lineRPN + "\n";
+					lineRPN = replaceCodeToName(lineRPN);
+					fileAnalysis << "\t\t//" + lineRPN + "\n";
 					continue;
 				}
 				if (lineRPN.find("W4") != std::string::npos)
@@ -157,6 +255,7 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					mainFunctionRecorded = true;
 					continue;
 				}
+				
 				if (lineRPN.find("W11") != std::string::npos)
 				{
 					if (lineForRecordInFile.length() != 0)
@@ -166,6 +265,7 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 						lineForRecordInFile = "";
 					}
 					lineRPN = reverseExpression(lineRPN);
+					lineRPN = replaceCodeToName(lineRPN);
 					lineRPN.erase(lineRPN.rfind(" "), 1);
 					fileAnalysis << "\t\t\t" << lineRPN << ";" << std::endl;
 					continue;
@@ -224,10 +324,7 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 								lineForRecordInFile = declareCondition(lineForRecordInFile,"while");
 							else
 								if (lineRPN.find("ÌÖÑ") != std::string::npos)
-								{
 									lineForRecordInFile = declareCondition(lineForRecordInFile, "for");
-									lineForRecordInFile = correctCycleFor(lineForRecordInFile);
-								}
 								else
 									lineForRecordInFile = declareCondition(lineForRecordInFile, "if");
 
@@ -239,6 +336,10 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 						}
 						if (lineRPN.find("ÀÝÌ") == std::string::npos)
 						{
+							if (isPrint == false)
+								lineForRecordInFile = reverseExpression(lineForRecordInFile);
+							else
+								isPrint = false;
 							if (lineForRecordInFile != "")
 								fileAnalysis << "\t\t\t\t" << lineForRecordInFile << ";\n";
 							lineForRecordInFile = "";
@@ -251,7 +352,10 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					{
 						if (lineForRecordInFile.length() != 0)
 						{
-							lineForRecordInFile = reverseExpression(lineForRecordInFile);
+							if (isPrint == false)
+								lineForRecordInFile = reverseExpression(lineForRecordInFile);
+							else
+								isPrint = false;
 							lineForRecordInFile.erase(lineForRecordInFile.rfind(" "), 1);
 							fileAnalysis << "\t\t\t" << lineForRecordInFile << ";" << std::endl;
 							lineForRecordInFile = "";
@@ -264,9 +368,10 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 
 				size_t pos = 0;
 				std::string token = "", nameFunctionInExpression = "";
+			
+				
 				while ((pos = lineRPN.find(' ')) != std::string::npos || lineRPN.length() != 0)
 				{
-
 					if (pos == std::string::npos)
 					{
 						token = lineRPN.substr(0, lineRPN.length());
@@ -277,6 +382,12 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 						token = lineRPN.substr(0, pos);
 						lineRPN.erase(0, pos + 1);
 					}
+
+					if(isPrint==false)
+						token = replaceCodeToName(token,token[0]);
+					if (token.find("printf") != std::string::npos)
+						isPrint = true;
+
 					if (token.find("ÀÝÌ") != std::string::npos)
 					{
 						token.erase(token.find("ÀÝÌ"), 3);
@@ -286,12 +397,12 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 							lineForRecordInFile += stack.top() +" ";
 							stack.pop();
 						}
-						lineForRecordInFile = reverseExpression(lineForRecordInFile);
+						lineForRecordInFile = reverseExpression(lineForRecordInFile);							
 						lineForRecordInFile = strArray(lineForRecordInFile);
 						stack.push(lineForRecordInFile);
 						continue;
 					}
-					if (token.find("Ô") != std::string::npos)
+ 					if (token.find("Ô") != std::string::npos)
 					{
 						token.erase(token.find("Ô"), 2);
 						int countArg = stoi(token);
@@ -302,24 +413,9 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 							stack.pop();
 						}
 						lineForRecordInFile = reverseExpression(lineForRecordInFile);
-						lineForRecordInFile = declareFunctionExpression(lineForRecordInFile);
-						if (countArg > 2)
-						{
-							std::string temp = lineForRecordInFile.substr(0, lineForRecordInFile.find(" ")) + ",";
-							lineForRecordInFile.erase(0, lineForRecordInFile.find(" ") + 1);
-							int ind = 1;
-							while (lineForRecordInFile.length() != 0)
-							{
-								if(ind<countArg-2)
-									temp += lineForRecordInFile.substr(0, lineForRecordInFile.find(" ")) + ",";
-								else
-									temp += lineForRecordInFile.substr(0, lineForRecordInFile.find(" ")) + "";
-								lineForRecordInFile.erase(0, lineForRecordInFile.find(" ") + 1);
-								ind++;
-							}
-							temp += lineForRecordInFile;
-							lineForRecordInFile = temp;
-						}
+						lineForRecordInFile = declareFunctionExpression(lineForRecordInFile,countArg);
+						if (isPrint == true)
+							lineForRecordInFile = replaceCodeToName(lineForRecordInFile);
 						stack.push(lineForRecordInFile);
 						continue;
 					}
@@ -338,7 +434,6 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 							lineForRecordInFile += getSymbolOperationByCode(token) + " ";
 						}
 
-						
 						stack.pop();
 						if (!stack.empty())
 						{
@@ -352,7 +447,7 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					{
 						int countType = std::stoi(stack.top());
 						stack.pop();
-						if (stack.top() == "W10")
+						if (stack.top() == "sizeof")
 							if (lineRPN.length() != 0 && lineRPN[1] == 'Ô' || lineRPN[2] == 'Ô')
 							{
 								stack.push(token);
@@ -388,11 +483,13 @@ void Translate_csharp::transalteToCSharp(std::string fileName_RPN, std::string f
 					stack.push(token);
 				}
 				lineForRecordInFile = "";
-				while (!stack.empty()) 
+				while (!stack.empty())
 				{
 					lineForRecordInFile += stack.top() + " ";
 					stack.pop();
 				}
+				
+				
 			}
 		}
 	

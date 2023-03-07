@@ -11,12 +11,7 @@ SyntaxAnalisator::~SyntaxAnalisator()
 {
 }
 
-System::String^ StlWStringToString(std::string const& os)
-{
-	System::String^ str = gcnew System::String(os.c_str());
-	//String^ str = gcnew String("");
-	return str;
-}
+
 
 std::string SyntaxAnalisator::getServiceWordCode(std::string str)
 {
@@ -66,40 +61,22 @@ std::string SyntaxAnalisator::getSymbolsConstCode(std::string str)
 	return "\0";
 }
 
-
-void SyntaxAnalisator::addCode(std::string str, std::map<std::string, std::string> & table, int numTable)
+System::String^ StlWStringToString(std::string const& os)
 {
-	int indexCode = 0;
-	for (const auto& word : table)
+	System::String^ str = gcnew System::String(os.c_str());
+	//String^ str = gcnew String("");
+	return str;
+}
+
+void SyntaxAnalisator::addCode(std::string str, std::map<std::string, std::string>& table, int numTable)
+{
+	std::string result = fillTable(str, table, numTable);
+	if (result.find("Error") != std::string::npos)
 	{
-		indexCode++;
+		System::String^ temp = StlWStringToString(str);
+		System::String^ tempResult = StlWStringToString(result);
+		System::Windows::Forms::MessageBox::Show(tempResult, temp, System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
 	}
-	indexCode++;
-	if (numTable == 1)
-	{
-		if(isIdentifier(str)==true)
-			table.insert(std::pair<std::string, std::string>(str, "I" + std::to_string(indexCode)));
-		else
-		{
-			
-			System::String^ temp = StlWStringToString(str);
-			System::Windows::Forms::MessageBox::Show("Error with identifier", temp, System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
-			return;
-		}
-	}
-	if (numTable == 2)
-	{
-		if(isNumber(str)==true)
-			table.insert(std::pair<std::string, std::string>(str, "N" + std::to_string(indexCode)));
-		else
-		{
-			System::String^ temp = StlWStringToString(str);
-			System::Windows::Forms::MessageBox::Show("Error with number", temp, System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
-			return;
-		}
-	}
-	if (numTable == 3)
-		table.insert(std::pair<std::string, std::string>(str, "C" + std::to_string(indexCode)));
 }
 
 int SyntaxAnalisator::checkStringSingleElem(std::string const& word)
@@ -190,7 +167,7 @@ bool SyntaxAnalisator::skipAnalyzeOneLineComment(bool readComment, std::string l
 	return false;
 }
 
-bool skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std::ofstream& file, std::string& word)
+bool SyntaxAnalisator::skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std::ofstream& file, std::string& word)
 {
 	if (readComment == true && isComment((int)line[index + 1], (int)line[index]) == true)
 	{
@@ -205,7 +182,10 @@ bool skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std
 	}
 	return false;
 }
-
+bool SyntaxAnalisator::isLibrary_header(std::string const& word)
+{
+	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
+}
 
 void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis)
 {
@@ -304,7 +284,7 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 							if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i + 1]) == false && isDigit((int)stringLanguageC[i + 1]) == false))
 							{
 								word += stringLanguageC[i];
-								if (isType(word) && (stringLanguageC[i + 1] == '*' || stringLanguageC[i + 2] == '*'))
+								if (isTypeDeclaration(word) && (stringLanguageC[i + 1] == '*' || stringLanguageC[i + 2] == '*'))
 								{
 									word += '*';
 									if (stringLanguageC[i + 2] == '*')
@@ -367,3 +347,9 @@ void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileNam
 	fileC.close();
 	fileAnalysis.close();
 }
+
+void SyntaxAnalisator::initialize()
+{
+}
+
+

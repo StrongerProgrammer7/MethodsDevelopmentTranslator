@@ -10,13 +10,12 @@ bool isLogicalSingleOperation(int const& elem);
 bool isLogicalDoubleOperation(int const& elem, int const& nextElem);
 bool isIncrement(int const& elem, int const& nextElem);
 bool isDoubleOperation(int const& elem, int const& nextElem);
-bool isComment(int const& slash, int const& star);
-bool isOneStringComment(int const& slash, int const& slash2);
 bool isDigit(int const &);
 bool isLetter(int const &);
 bool isLibrary_header(std::string const &);
 bool isNumber(std::string const& num);
-bool isType(std::string const& word);
+bool isTypeDeclaration(std::string type);
 bool isIdentifier(std::string const& word);
-std::string intToStr(int num);
+std::string intToStrWithSpace(int num);
+bool isSpaceInEndString(std::string line);
 #endif

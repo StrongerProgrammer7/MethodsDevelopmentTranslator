@@ -9,6 +9,9 @@ using namespace System::Windows::Forms;
 using namespace System::IO;
 
 std::string fileText_C = "";
+SyntaxAnalisator analisator;
+ReversePolishNotation RPN;
+Translate_csharp codeCSharp;
 
 [STAThreadAttribute]
 void main(array<String^>^ args)
@@ -26,6 +29,7 @@ void marshalString(String^ s, std::string& std_string)
 	std_string = chars;
 	Marshal::FreeHGlobal(IntPtr((void*)chars));
 }
+
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_loadFile_Click(System::Object^ sender, System::EventArgs^ e)
 {
@@ -46,8 +50,6 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_loadFile_Cl
 			MessageBox::Show(this, "File don't open", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		}
 	}
-	
-
 }
 
 bool isExtensionTXT(String^ line)
@@ -59,11 +61,11 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_
 {
 	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text)==true)
 	{
-		SyntaxAnalisator analisator;
+		
 		std::string fileName = "";
 		marshalString(tb_nameFileAnylize->Text, fileName);
 		analisator.analyze(fileText_C, fileName);
-
+		
 		StreamReader^ fileAnalyze = File::OpenText(tb_nameFileAnylize->Text);
 		tb_syntaxAnalisator->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
@@ -79,7 +81,8 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePoli
 {
 	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
 	{
-		ReversePolishNotation RPN;
+		
+		RPN.initialize(analisator.getIdentifier(), analisator.getNumbers(), analisator.getSymbols());
 		std::string file = "";
 		marshalString(tb_nameFileAnylize->Text, file);
 		RPN.reversePolishNotationAnalyze(file, "RPN.txt");
@@ -100,7 +103,7 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_toCSharp_Cl
 {
 	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
 	{
-		Translate_csharp codeCSharp;
+		codeCSharp.initialize(RPN.getIdentifier(), RPN.getNumbers(), RPN.getSymbols());
 		std::string file = "";
 		marshalString(tb_nameFileAnylize->Text, file);
 		codeCSharp.transalteToCSharp("RPN.txt", "CodeCSharp.txt");

@@ -9,7 +9,10 @@ class Translator
 public:
 	Translator();
 	~Translator();
-
+	virtual std::map<std::string, std::string> getIdentifier();
+	virtual std::map<std::string, std::string> getNumbers();
+	virtual std::map<std::string, std::string> getSymbols();
+	virtual void initialize(std::map<std::string, std::string> identifier, std::map<std::string, std::string> numberConst, std::map<std::string, std::string> symbolsConst);
 protected:
 #define SIZE_serviceWord 19
 #define SIZE_separators 9
@@ -99,12 +102,16 @@ protected:
 		// }			return
 		{"R6", 9},{"W11", 9},{"DCL",9}
 	};
+
 	bool isTypeDeclarationByCode(std::string code_type);
-	bool isTypeDeclaration(std::string type);
+	bool isComment(int const& slash, int const& star);
+	bool isOneStringComment(int const& slash, int const& slash2);
 	bool isCycle(std::string word);
 	bool isIFCondition(std::string word);
 	bool isELSECondition(std::string word);
 	bool isConst(std::string const_type);
+	std::string nameType(std::string token);
+	std::string Translator::fillTable(std::string str, std::map<std::string, std::string>& table, int numTable);
 };
 
 #endif

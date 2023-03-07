@@ -43,16 +43,6 @@ bool isDoubleOperation(int const& elem, int const& nextElem)
 		(elem == '*' && nextElem == '=') || (elem == '/' && nextElem == '=') ? true : false;
 }
 
-bool isComment(int const &slash, int const& star)
-{
-	return slash == 47 && star == 42? true : false;
-}
-bool isOneStringComment(int const& slash, int const& slash2)
-{
-	return slash == 47 && slash2 == 47 ? true : false;
-}
-
-
 bool isLetter(int const &elem)
 {
 	return (elem >= 65 && elem <= 90) || (elem >= 97 && elem <= 122) ? true : false;
@@ -77,14 +67,12 @@ bool isNumber(std::string const &num)
 	return true;
 }
 
-bool isLibrary_header(std::string const &word)
+bool isTypeDeclaration(std::string type)
 {
-	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
-}
-
-bool isType(std::string const& word)
-{
-	return word == "int" || word == "float" || word == "double" || word == "char";
+	return type == "int" || type == "float" || type == "char" || type == "const int" || type == "double" || type == "int*" || type == "double*" ||
+		type == "float*" || type == "const" || type == "char*" || type == "const float"
+		|| type == "const double" || type == "const char" || type == "const float*" || type == "const double*"
+		|| type == "const char*" || type == "const int*" ? true : false;
 }
 
 bool isIdentifier(std::string const& word)
@@ -97,7 +85,7 @@ bool isIdentifier(std::string const& word)
 	return true;
 }
 
-std::string intToStr(int num)
+std::string intToStrWithSpace(int num)
 {
 	std::string temp = "";
 	while (num != 0)
@@ -109,6 +97,11 @@ std::string intToStr(int num)
 	temp.erase(temp.length() - 1, 1);
 	reverse(temp.begin(), temp.end());
 	return temp;
+}
+
+bool isSpaceInEndString(std::string line)
+{
+	return line.rfind(" ") == line.length() - 1 ? true : false;
 }
 
 
