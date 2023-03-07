@@ -14,7 +14,7 @@ public:
 	virtual std::map<std::string, std::string> getSymbols();
 	virtual void initialize(std::map<std::string, std::string> identifier, std::map<std::string, std::string> numberConst, std::map<std::string, std::string> symbolsConst);
 protected:
-#define SIZE_serviceWord 19
+#define SIZE_serviceWord 20
 #define SIZE_separators 9
 #define SIZE_operation 20
 #define SIZE_columns 2
@@ -38,7 +38,8 @@ protected:
 		{"float*","W16"},
 		{"double*","W17"},
 		{"char*","W18"},
-		{"const","W19"}
+		{"const","W19"},
+		{"free","W20"}
 	};
 	std::string const separators[SIZE_separators][SIZE_columns] =
 	{

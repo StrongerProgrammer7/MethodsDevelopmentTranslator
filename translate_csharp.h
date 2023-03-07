@@ -9,6 +9,7 @@ public:
 	void transalteToCSharp(std::string fileName_RPN, std::string fileName_CSharp);
 
 private:
+	std::string nameArrayForReturn = "", nameFunctionReturnArray = "";
 	std::stack<std::string> stack;
 	std::string reverseExpression(std::string expression);
 	std::string declareFunction(std::string line);
@@ -21,6 +22,7 @@ private:
 	std::string getNameByCode(std::map<std::string, std::string>& table, std::string code);
 	std::string replaceCodeToName(std::string line, char name);
 	std::string replaceCodeToName(std::string line);
+	std::string replaceMalloc(std::string const& line);
 
 };
 

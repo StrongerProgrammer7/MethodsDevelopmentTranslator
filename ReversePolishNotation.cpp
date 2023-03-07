@@ -63,7 +63,7 @@ bool ReversePolishNotation::isExistsComma(std::string line)
 }
 bool ReversePolishNotation::isBeginFunctionName(std::string word)
 {
-	return word[0] == 'I' || word == "W9" || word == "W10" ? true : false;
+	return word[0] == 'I' || word == "W9" || word == "W10" || word == "W20" ? true : false;
 }
 
 bool ReversePolishNotation::isExistsFunctionExpression(std::vector<std::map<std::string, int>>& stack)

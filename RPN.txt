@@ -1,52 +1,52 @@
-W8 I10 
-W8 I11 
+W8 I0 
+W8 I1 
 
-I3 1 int I12 1 int 
+I2 1 int I3 1 int 
 1 1 ÍÏ 
-I13 1 int N1 O5 
-I12 N1 O10 
+I4 1 int N0 O5 
+I3 N0 O10 
 ÌÖ1 ÓÏË 
-I12 I12 N3 O4 O5 
-I13 O20 
+I3 I3 N1 O4 O5 
+I4 O20 
 ÌÖ1:
-I13 W11 
+I4 W11 
 ÊÏ
 
 /*test comment*/ 
-I5 1 int I12 1 int 
+I5 1 int I3 1 int 
 2 1 ÍÏ 
-I2 1 int I3 I12 2Ô O5 
-I14 1 int* W9 I2 W10 1 int 2Ô O3 2Ô 1 int* O5 
-I15 1 int N1 O5 
-I12 N1 O10 
+I6 1 int I2 I3 2Ô O5 
+I7 1 int* W9 I6 W10 1 int 2Ô O3 2Ô 1 int* O5 
+I8 1 int N0 O5 
+I3 N0 O10 
 ÌÖ1 ÓÏË 
-I14 I15 2ÀİÌ I12 N3 O6 O5 
-I12 N3 O13 
-I15 O20 
+I7 I8 2ÀİÌ I3 N1 O6 O5 
+I3 N1 O13 
+I8 O20 
 ÌÖ1:
-I14 W11 
+I7 W11 
 ÊÏ
 
 // Main 
 /* double
 comment 
 */ 
-W4 1 int I0 1 int I1 1ÀİÌ 1 const char* 
+W4 1 int I9 1 int I10 1ÀİÌ 1 const char* 
 3 1 ÍÏ 
-I2 1 int I3 N0 2Ô O5 
-I4 1 int* I5 N0 2Ô O5 
-I6 1 int N1 O5 
-I7 1 int N1 O5 I7 I2 O8 I7 O20 
+I6 1 int I2 N2 2Ô O5 
+I11 1 int* I5 N2 2Ô O5 
+I12 1 int N0 O5 
+I13 1 int N0 O5 I13 I6 O8 I13 O20 
 ÌÖÑ1 ÓÏË 
-I7 N2 O8 I7 N1 O7 O17 
+I13 N3 O8 I13 N0 O7 O17 
 Ì1 ÓÏË
-I8 C0 I7 I4 I7 2ÀİÌ 4Ô 
+I14 C0 I13 I11 I13 2ÀİÌ 4Ô 
 Ì1: 
-I6 I4 I7 2ÀİÌ O14 
+I12 I11 I13 2ÀİÌ O14 
 ÌÖÑ1:
-I8 C1 I6 3Ô 
-I9 I4 2Ô 
-N1 W11 
+I14 C1 I12 3Ô 
+W20 I11 2Ô 
+N0 W11 
 ÊÏ
 
 

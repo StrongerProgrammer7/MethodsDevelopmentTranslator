@@ -1,3 +1,20 @@
+int setDigitNumber(int num)
+{
+	int size = sizeNumber(num);
+	int* digits = (int*)malloc(size * sizeof(int));
+	int index = 0;
+	while (num != 0)
+	{
+		digits[index] = num % 10;
+		num /= 10;
+		index++/*--*/;
+	}
+	return digits;
+}
+// Main
+/* double
+comment
+*/
 int main(int argc, const char* argv[])
 {
 	int size = sizeNumber(36);
