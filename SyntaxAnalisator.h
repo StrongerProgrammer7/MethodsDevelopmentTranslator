@@ -8,8 +8,9 @@ class SyntaxAnalisator : public Translator
 {
 public:
 	SyntaxAnalisator();
+protected:
+	void makeSyntaxAnalyze(std::string from_file_C, std::string to_file_lexical);
 	~SyntaxAnalisator();
-	void analyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis);
 private:
 	void addCode(std::string str, std::map<std::string, std::string>& table, int numTable);
 	int checkStringSingleElem(std::string const& word);

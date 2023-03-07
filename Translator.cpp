@@ -25,13 +25,6 @@ std::map<std::string, std::string> Translator::getSymbols()
 	return symbolsConst;
 }
 
-void Translator::initialize(std::map<std::string, std::string> identifier, std::map<std::string, std::string> numberConst, std::map<std::string, std::string> symbolsConst)
-{
-	this->identifier = identifier;
-	this->symbolsConst = symbolsConst;
-	this->numberConst = numberConst;
-}
-
 bool Translator::isTypeDeclarationByCode(std::string type_code)
 {
 	return type_code == "W1" || type_code == "W2" || type_code == "W3" || type_code == "W14" || type_code == "W15" || type_code == "W16" || type_code == "W17" ||

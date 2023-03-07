@@ -138,7 +138,7 @@ bool SyntaxAnalisator::isLibrary_header(std::string const& word)
 	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
 }
 
-void SyntaxAnalisator::analyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis)
+void SyntaxAnalisator::makeSyntaxAnalyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis)
 {
 	std::ifstream fileC;
 	std::ofstream fileAnalysis(fileName_Path_SaveAnalis);

@@ -1,13 +1,13 @@
 #pragma once
-#include "Translator.h"
+#include "ReversePolishNotation.h"
 
-class Translate_csharp : public Translator
+class Translate_csharp : public ReversePolishNotation
 {
 public:
 	Translate_csharp();
+protected:
+	void transalteToCSharp(std::string from_file_RPN, std::string to_file_CSharp);
 	~Translate_csharp();
-	void transalteToCSharp(std::string fileName_RPN, std::string fileName_CSharp);
-
 private:
 	std::string nameArrayForReturn = "", nameFunctionReturnArray = "";
 	std::stack<std::string> stack;

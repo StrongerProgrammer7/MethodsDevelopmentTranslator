@@ -140,6 +140,7 @@
     <ClCompile Include="SyntaxAnalisator.cpp" />
     <ClCompile Include="translate_csharp.cpp" />
     <ClCompile Include="Translator.cpp" />
+    <ClCompile Include="TranslatorFromCToCSharp.cpp" />
     <ClCompile Include="Translator_LanguageC.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="SyntaxAnalisator.h" />
     <ClInclude Include="translate_csharp.h" />
     <ClInclude Include="Translator.h" />
+    <ClInclude Include="TranslatorFromCToCSharp.h" />
     <ClInclude Include="Translator_LanguageC.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -160,13 +162,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt" />
-    <Text Include="CodeCSharp.txt" />
-    <Text Include="lexical.txt" />
-    <Text Include="RPN.txt" />
     <Text Include="test.txt" />
+    <Text Include="translator_file\lexical.txt" />
+    <Text Include="translator_file\RPN.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CodeCSharp.cs" />
+    <None Include="translator_file\CodeCSharp.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

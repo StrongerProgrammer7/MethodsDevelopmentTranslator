@@ -8,12 +8,11 @@ class Translator
 {
 public:
 	Translator();
-	~Translator();
-	virtual std::map<std::string, std::string> getIdentifier();
-	virtual std::map<std::string, std::string> getNumbers();
-	virtual std::map<std::string, std::string> getSymbols();
-	virtual void initialize(std::map<std::string, std::string> identifier, std::map<std::string, std::string> numberConst, std::map<std::string, std::string> symbolsConst);
+	std::map<std::string, std::string> getIdentifier();
+	std::map<std::string, std::string> getNumbers();
+	std::map<std::string, std::string> getSymbols();
 protected:
+	~Translator();
 #define SIZE_serviceWord 20
 #define SIZE_separators 9
 #define SIZE_operation 20

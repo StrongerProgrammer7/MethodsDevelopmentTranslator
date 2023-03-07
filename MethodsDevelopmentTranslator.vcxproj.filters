@@ -33,6 +33,9 @@
     <ClCompile Include="translate_csharp.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TranslatorFromCToCSharp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Translator_LanguageC.h">
@@ -56,6 +59,9 @@
     <ClInclude Include="translate_csharp.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="TranslatorFromCToCSharp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="C.txt">
@@ -64,18 +70,15 @@
     <Text Include="test.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
-    <Text Include="lexical.txt">
+    <Text Include="translator_file\lexical.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
-    <Text Include="RPN.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="CodeCSharp.txt">
+    <Text Include="translator_file\RPN.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CodeCSharp.cs">
+    <None Include="translator_file\CodeCSharp.cs">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>
