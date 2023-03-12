@@ -10,20 +10,6 @@ Translator::~Translator()
 {
 }
 
-std::map<std::string, std::string> Translator::getIdentifier()
-{
-	return identifier;
-}
-
-std::map<std::string, std::string> Translator::getNumbers()
-{
-	return numberConst;
-}
-
-std::map<std::string, std::string> Translator::getSymbols()
-{
-	return symbolsConst;
-}
 
 bool Translator::isTypeDeclarationByCode(std::string type_code)
 {
@@ -56,6 +42,21 @@ bool Translator::isIFCondition(std::string word_code)
 bool Translator::isELSECondition(std::string word_code)
 {
 	return word_code == "W6" ? true : false;
+}
+
+bool Translator::isInclude(std::string word_code)
+{
+	return word_code == "W8" ? true : false;
+}
+
+bool Translator::isOpenAnyBracket(std::string token)
+{
+	return token == "R3" || token == "R5" ? true : false;
+}
+
+bool Translator::isCloseAnyBracket(std::string token)
+{
+	return token == "R4" || token == "R6" ? true : false;
 }
 
 std::string Translator::nameType(std::string token)

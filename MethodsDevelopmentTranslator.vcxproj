@@ -102,6 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="function.cpp" />
     <ClCompile Include="ReversePolishNotation.cpp" />
+    <ClCompile Include="LexicalAnalisator.cpp" />
     <ClCompile Include="SyntaxAnalisator.cpp" />
     <ClCompile Include="translate_csharp.cpp" />
     <ClCompile Include="Translator.cpp" />
@@ -147,6 +149,7 @@
     <ClInclude Include="function.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="ReversePolishNotation.h" />
+    <ClInclude Include="LexicalAnalisator.h" />
     <ClInclude Include="SyntaxAnalisator.h" />
     <ClInclude Include="translate_csharp.h" />
     <ClInclude Include="Translator.h" />

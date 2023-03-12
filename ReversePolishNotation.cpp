@@ -155,8 +155,12 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 				if (lineLexical.find("W8") != std::string::npos)
 				{
 					fileAnalysis << lineLexical << std::endl;
+					countInclude++;
 					continue;
 				}
+				if (lineLexical.length() > 2 && isComment((int)lineLexical[0], (int)lineLexical[1]) && lineLexical.find("*/") == std::string::npos)
+					manyLineComment = true;
+
 				if (lineLexical.length() > 2 && (isComment((int)lineLexical[0], (int)lineLexical[1]) || isOneStringComment((int)lineLexical[0], (int)lineLexical[1])))
 				{
 					fileAnalysis << lineLexical << std::endl;
@@ -187,7 +191,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 					{
 						if (positionTypeConversion(lineLexical) == 0)
 						{
-							token = lineLexical.substr(3, 3);
+							token = lineLexical.substr(3, lineLexical.find("R4")-2);
 							lineLexical.erase(0,10);
 						}
 						else
@@ -228,7 +232,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 
 					if (nameFunctionInExpression != "" && isDeclareFunction == false)
 					{
-						if (isBeginFunctionName(nameFunctionInExpression)==true && token == "R3")
+						if (isBeginFunctionName(nameFunctionInExpression)==true && isOpenBracket(token))//this
 							isReadFunctionInExpresiion = true;
 						else
 							nameFunctionInExpression = token;
@@ -287,6 +291,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 								if (upElemStack->first == "PROC")
 								{
 									fileAnalysis << intToStrWithSpace(upElemStack->second) << " мо" << " ";
+									countFunction++;
 									continue;
 								}
 								if (isIFCondition(upElemStack->first) == true)

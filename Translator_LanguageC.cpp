@@ -58,8 +58,7 @@ bool isExtensionTXT(String^ line)
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text)==true)
-	{
+
 		/*std::string fileName = "";
 		marshalString(tb_nameFileAnylize->Text, fileName);*/
 		
@@ -67,17 +66,11 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_
 		tb_syntaxAnalisator->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
-	}
-	else
-	{
-		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-	}
+
 }
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
-	{
 		/*std::string file = "";
 		marshalString(tb_nameFileAnylize->Text, file);*/
 
@@ -85,26 +78,18 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePoli
 		tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
-	}
-	else
-	{
-		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-	}
 	
 }
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	if (tb_nameFileAnylize->Text != "" && isExtensionTXT(tb_nameFileAnylize->Text) == true)
-	{
-
 		StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/CodeCSharp.cs", System::Text::Encoding::GetEncoding(1251));
 		tb_codeCSharp->Text = fileAnalyze->ReadToEnd();
 		fileAnalyze->Close();
 		btn_analisator->Enabled = false;
-	}
-	else
-	{
-		MessageBox::Show(this, "Write to file name! Or error to extension file, (.txt uses)", "error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-	}
+}
+
+System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_syntax_analisator_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	MessageBox::Show("Check", "Check success!", MessageBoxButtons::OK, MessageBoxIcon::Information);
 }

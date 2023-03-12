@@ -21,9 +21,6 @@
     <ClCompile Include="function.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="SyntaxAnalisator.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Translator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -34,6 +31,12 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="TranslatorFromCToCSharp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="LexicalAnalisator.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="SyntaxAnalisator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,9 +50,6 @@
     <ClInclude Include="include.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SyntaxAnalisator.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Translator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -60,6 +60,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="TranslatorFromCToCSharp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="LexicalAnalisator.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="SyntaxAnalisator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

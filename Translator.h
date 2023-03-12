@@ -3,16 +3,14 @@
 #define TRANSLATOR_H
 
 #include "include.h"
-
+//считать кол функций в отдельную переменную (ОПЗ н НП ) чтобы отправить потом в функцию кол подпрограмм 4лб
 class Translator
 {
 public:
 	Translator();
-	std::map<std::string, std::string> getIdentifier();
-	std::map<std::string, std::string> getNumbers();
-	std::map<std::string, std::string> getSymbols();
 protected:
 	~Translator();
+	int countFunction = 0,countInclude = 0;
 #define SIZE_serviceWord 20
 #define SIZE_separators 9
 #define SIZE_operation 20
@@ -109,6 +107,9 @@ protected:
 	bool isIFCondition(std::string word);
 	bool isELSECondition(std::string word);
 	bool isConst(std::string const_type);
+	bool isInclude(std::string word_code);
+	bool isOpenAnyBracket(std::string token);
+	bool isCloseAnyBracket(std::string token);
 	std::string nameType(std::string token);
 	std::string fillTable(std::string str, std::map<std::string, std::string>& table, int numTable);
 	std::string getServiceWord(std::string str, bool get_code);

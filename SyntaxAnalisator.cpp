@@ -2,6 +2,7 @@
 #include "SyntaxAnalisator.h"
 #include "function.h"
 
+
 SyntaxAnalisator::SyntaxAnalisator()
 {
 }
@@ -11,293 +12,511 @@ SyntaxAnalisator::~SyntaxAnalisator()
 {
 }
 
-
-System::String^ StlWStringToString(std::string const& os)
+bool isIdentifierByCode(std::string token)
 {
-	System::String^ str = gcnew System::String(os.c_str());
-	//String^ str = gcnew String("");
-	return str;
+	return token[0] == 'I' ? true : false;
 }
 
-void SyntaxAnalisator::addCode(std::string str, std::map<std::string, std::string>& table, int numTable)
+bool isOperationByCode(std::string token)
 {
-	std::string result = fillTable(str, table, numTable);
-	if (result.find("Error") != std::string::npos)
+	return token[0] == 'O' ? true : false;
+}
+
+bool isSymbolConst(std::string token)
+{
+	return token[0] == 'C' ? true : false;
+}
+
+bool isNumberConstByCode(std::string token)
+{
+	return token[0] == 'N' ? true : false;
+}
+
+//std::string SyntaxAnalisator::readFromFileToString()
+//{
+//	std::string code = "";
+//	try
+//	{
+//		std::ifstream lexicalFile("./translator_file/lexical.txt");
+//		if (lexicalFile.is_open())
+//		{
+//			std::string temp = "";
+//			while (!lexicalFile.eof())
+//			{
+//				temp = "";
+//				getline(lexicalFile, temp);
+//				if (isSpaceInEndString(temp) == true)
+//					temp.replace(temp.rfind(" "), 1, "");
+//
+//				for (__int64 i = 0; i < temp.length(); i++)
+//				{
+//					if (isServiceSymbols((int)temp[i]) == false)
+//						code += temp[i];
+//				}
+//				code += " ";
+//
+//			}
+//			return code;
+//		}
+//		else
+//		{
+//			System::Windows::Forms::MessageBox::Show("File don't open", "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+//		}
+//	}
+//	catch (const std::exception&)
+//	{
+//		System::Windows::Forms::MessageBox::Show("Problem with file to Syntaxanalisator", "Error",System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+//	}
+//	
+//}
+
+std::string getToken(std::string& line)
+{
+	std::string token = "";
+	__int64 pos = line.find(' ');
+	if (pos == std::string::npos)
 	{
-		System::String^ temp = StlWStringToString(str);
-		System::String^ tempResult = StlWStringToString(result);
-		System::Windows::Forms::MessageBox::Show(tempResult, temp, System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+		token = line.substr(0, line.length());
+		line = "";
 	}
-}
-
-int SyntaxAnalisator::checkStringSingleElem(std::string const& word)
-{
-	if (isDigit((int)word[0]) == true)
-		return 1;
-	if (isOperation((int)word[0]) == true || isLogicalSingleOperation((int)word[0]) == true)
-		return 2;
-	if (isSeparators((int)word[0]) == true)
-		return 3;
-	if (isLetter((int)word[0]) == true)
-		return 4;
-	return 0;
-}
-
-std::string SyntaxAnalisator::getCodeWordLength_1(std::string word)
-{
-	switch (checkStringSingleElem(word))
+	else
 	{
-	case 1:
-		if (getCodeByName(numberConst,word) == "\0")
-			addCode(word, numberConst, 2);
-		return getCodeByName(numberConst, word);
-	case 2:
-		return getOperations(word,true);
-	case 3:
-		return getSeparators(word,true);
-	case 4:
-		if (getCodeByName(identifier,word) == "\0")
-			addCode(word, identifier, 1);
-		return getCodeByName(identifier, word);
-	default:
-		return "";
+		token = line.substr(0, pos);
+		line.erase(0, pos + 1);
 	}
+	return token;
 }
 
 
-std::string SyntaxAnalisator::getCodeWordLengthGreaterOne(std::string word)
+bool SyntaxAnalisator::makeSyntaxAnalyze()
 {
-	std::string code = getServiceWord(word,true);
-	if (code == "\0")
-		code = getOperations(word,true);
-	if (code == "\0")
+	try
 	{
-		if (isNumber(word) == true)
+		std::ifstream lexicalFile("./translator_file/lexical.txt");
+		if (lexicalFile.is_open())
 		{
-			if (getCodeByName(numberConst, word) == "\0")
-				addCode(word, numberConst, 2);
-			return getCodeByName(numberConst, word);
+			std::string temp = "";
+			bool isDeclareFunction = false,isCycle = false, isIFElse = false, manyLineComment = false;;
+			while (!lexicalFile.eof())
+			{
+				std::string code = "";
+				getline(lexicalFile, code);
+
+				if (code.find("W8") == 0)
+				{
+					if (countFunction <= this->countInclude)
+						countInclude++;
+					else
+						return false;
+					continue;
+				}
+
+				if (code.length() > 2 && isComment((int)code[0], (int)code[1]) && code.find("*/") == std::string::npos)
+					manyLineComment = true;
+
+				if (code.length() > 2 && (isComment((int)code[0], (int)code[1]) || isOneStringComment((int)code[0], (int)code[1])))
+					continue;
+
+				if (manyLineComment == true)
+				{
+					if (code.find("*/") != std::string::npos)
+						manyLineComment = false;
+					continue;
+				}
+
+				if (code.find("R5") == 0)
+				{
+					if (isDeclareFunction == false && isCycle == false && isIFElse == false)
+						return false;
+					if (isDeclareFunction == true)
+						isDeclareFunction = false;
+					if (isCycle == true)
+						isCycle = false;
+					if (isIFElse == true)
+						isIFElse = false;
+					continue;
+				}
+
+				if (code.find("R6") == 0)
+					continue;
+				__int64 pos = 0;
+				std::string token = "";
+				int countInclude = 0, countFunction = 0;
+				
+				while ((pos = code.find(' ')) != std::string::npos || code.length() != 0)
+				{
+					token = getToken(code);
+
+					if (isInclude(token) == true || token=="W9" || token =="W10")
+						return false;
+	
+					if ((isTypeDeclarationByCode(token) == true || token=="W13") && is_declareFunction(code) == true)
+					{
+						countFunction++;
+						isDeclareFunction = true;
+						token = code.substr(0, 2);
+						code.erase(0, 3);
+						if (isIdentifierByCode(token) == true)
+						{
+							if (setArguments(code) == true)
+							{
+								continue;
+							}
+							else
+								return false;
+						}
+						else
+							return false;
+					}
+
+					if (isTypeDeclarationByCode(token)==true)
+					{
+						if (operators(code, "type") == false)
+							return false;
+					}
+					else
+					{
+						if (isIFCondition(token) == true || token == "W7" == true || isELSECondition(token)==true)
+						{
+							if (operators(code, "condition") == false)
+								return false;
+						}
+						if (token == "W12")
+						{
+							if (operators(code, "for") == false)
+								return false;
+						}
+						if (isIdentifierByCode(token) == true)
+						{
+							if (operators(code, "Id") == false)
+								return false;
+						}
+						else
+							return false;
+					}
+				}
+			}
+			return true;
 		}
 		else
 		{
-			if ((int)word[0] == 34)// \"
-			{
-				if (isLibrary_header(word) == false)
-				{
-					if (getCodeByName(symbolsConst, word) == "\0")
-						addCode(word, symbolsConst, 3);
-					return getCodeByName(symbolsConst, word);
-				}
-			}
-			if (getCodeByName(identifier, word) == "\0")
-				addCode(word, identifier, 1);
-			return getCodeByName(identifier, word);
+			System::Windows::Forms::MessageBox::Show("File don't open", "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+			return false;
 		}
 	}
-	else
-		return code;
-}
-
-std::string SyntaxAnalisator::getCodeWord(std::string word)
-{
-	if (word.length() == 1)
-		return getCodeWordLength_1(word);
-	else
-		return getCodeWordLengthGreaterOne(word);
-}
-
-bool SyntaxAnalisator::skipAnalyzeOneLineComment(bool readComment, std::string line, __int64 index,std::ofstream& file)
-{
-	if (readComment == false && isOneStringComment((int)line[index], (int)line[index + 1]) == true)
+	catch (const std::exception&)
 	{
-		std::string oneLineComment = "";
-		oneLineComment.assign(line, index, line.length() - index);
-		file << oneLineComment << " ";
-		return true;
+		System::Windows::Forms::MessageBox::Show("Problem with file to Syntaxanalisator", "Error",System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
 	}
-	return false;
+	
+	
 }
 
-bool SyntaxAnalisator::skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std::ofstream& file, std::string& word)
+
+
+bool SyntaxAnalisator::setArguments(std::string& code)
 {
-	if (readComment == true && isComment((int)line[index + 1], (int)line[index]) == true)
+	__int64 pos = 0;
+	std::string temp = code.substr(0, code.find("R4"));
+	code.erase(0, code.find("R4") + 3);
+	bool type_ident = false;
+	while ((pos = temp.find(' ')) != std::string::npos || temp.length() != 0)
 	{
-		readComment = false;
-		word += line[index];
-		word += line[index + 1];
-		if (word != "\0" && word != "")
-			file << word << " ";
-		word = "";
-		index++;
-		return true;
-	}
-	return false;
-}
-bool SyntaxAnalisator::isLibrary_header(std::string const& word)
-{
-	return (int)word[0] == 34 && (int)word[word.length() - 1] == 34 && (int)word[word.length() - 2] == 104 && (int)word[word.length() - 3] == 46 ? true : false;
-}
-
-void SyntaxAnalisator::makeSyntaxAnalyze(std::string filePathOrName_C, std::string fileName_Path_SaveAnalis)
-{
-	std::ifstream fileC;
-	std::ofstream fileAnalysis(fileName_Path_SaveAnalis);
-	fileC.exceptions(std::ifstream::badbit);
-	try
-	{
-		fileC.open(filePathOrName_C);
-
-		if (fileC.is_open())
+		std::string token = temp.substr(0, pos);
+		temp.erase(0, pos + 1);
+		if (token == "R8")
+			continue;
+		if (isTypeDeclarationByCode(token) == true && type_ident == false)
 		{
-			bool readComment = false;
-			std::string word = "";
-			while (!fileC.eof())
-			{
-				std::string stringLanguageC = "";
-				getline(fileC, stringLanguageC);
-				for (__int64 i = 0; i < stringLanguageC.length(); i++)
-				{
-					if (isServiceSymbols((int)stringLanguageC[i]) == true)
-						continue;
-					if (isComment((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
-						readComment = true;
-					if (skipAnalyzeOneLineComment(readComment,stringLanguageC,i,fileAnalysis)==true)
-						break;
-
-					if (skipAnalyzeComment(readComment, stringLanguageC, i, fileAnalysis,word))
-						continue;
-
-					if (readComment == false)
-					{
-						if (isSeparators((int)stringLanguageC[i]) == true && word[0] != '\"')
-						{
-							if (word.length() != 0)
-								fileAnalysis << getCodeWord(word) << " ";
-							word = stringLanguageC[i];
-							fileAnalysis << getCodeWord(word) << " ";
-							word = "";
-							continue;
-						}
-
-						// <library.h> and "string"
-						if (stringLanguageC[i] == '<' || stringLanguageC[i] == '\"')
-						{
-							int posClose = 0;
-							int countSymbols = 0;
-							if (stringLanguageC[i] == '<')
-								posClose = stringLanguageC.find(">", 1);
-							else
-								posClose = stringLanguageC.rfind('\"');
-
-							if (posClose != -1)
-							{
-								countSymbols = posClose + 1 - i;
-								word.assign(stringLanguageC, i, countSymbols);
-								if (word.find(".h") != -1)
-								{
-									fileAnalysis << getCodeWord(word) << " ";
-									word = "";
-									if (stringLanguageC[static_cast<__int64>(posClose) + 1] == '\0')
-										break;
-									else
-										i = posClose;
-								}
-								else
-								{
-									if (word[0] == '\"')
-									{
-										fileAnalysis << getCodeWord(word) << " ";
-										i = static_cast<__int64>(posClose) + 1;
-
-									}
-								}
-								word = "";
-							}
-						}
-
-						if (isOperation((int)stringLanguageC[i]) == true || isLogicalSingleOperation((int)stringLanguageC[i]) == true)
-						{
-							if (isIncrement((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true ||
-								isDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true ||
-								isLogicalDoubleOperation((int)stringLanguageC[i], (int)stringLanguageC[i + 1]) == true)
-							{
-								word += stringLanguageC[i];
-								i++;
-							}
-							word += stringLanguageC[i];
-							fileAnalysis << getCodeWord(word) << " ";
-							word = "";
-							continue;
-						}
-
-						if (stringLanguageC[i] != ' ')
-						{
-							if (isLetter((int)stringLanguageC[i]) == true && (isLetter((int)stringLanguageC[i + 1]) == false && isDigit((int)stringLanguageC[i + 1]) == false))
-							{
-								word += stringLanguageC[i];
-								if (isTypeDeclaration(word) && (stringLanguageC[i + 1] == '*' || stringLanguageC[i + 2] == '*'))
-								{
-									word += '*';
-									if (stringLanguageC[i + 2] == '*')
-										i += 2;
-									else
-										i++;
-								}
-								fileAnalysis << getCodeWord(word) << " ";
-								word = "";
-								continue;
-							}
-							else
-							{
-								if (stringLanguageC[i] == '#')
-								{
-									word += stringLanguageC[i];
-									continue;
-								}
-
-							}
-							word += stringLanguageC[i];
-						}
-						else
-						{
-							if (word == "\0")
-								continue;
-							else
-							{
-								fileAnalysis << getCodeWord(word) << " ";
-								word = "";
-							}
-						}
-					}
-					else
-					{
-						word += stringLanguageC[i];
-					}
-
-				}
-				if (word != "\0")
-				{
-					if (readComment == false)
-						fileAnalysis << getCodeWord(word);
-					else
-						word += '\n';
-				}
-				if (readComment == false)
-					fileAnalysis << "\n";
-			}
+			type_ident = true;
+			continue;
 		}
+		else
+			if (isTypeDeclarationByCode(token) == true)
+				return false;
 
+		if (isIdentifierByCode(token)==true && type_ident == true)
+		{
+			type_ident = false;
+			continue;
+		}
+		else
+			if (isIdentifierByCode(token)==true)
+				return false;
 	}
-	catch (const std::ifstream::failure & exep)
+	return true;
+}
+
+bool is_declareFunction(std::string code)
+{
+	__int64 pos = 0;
+	int countSpace = 0;
+	while ((pos = code.find(' ')) != std::string::npos || code.length() != 0)
 	{
-		std::cout << " Exception opening/reading file";
-		std::cout << exep.what();
-		System::Windows::Forms::MessageBox::Show("File don't open", "error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+		std::string token = code.substr(0, pos);
+		code.erase(0, pos + 1);
+		countSpace++;
+		if (token == "R3" && countSpace > 3)
+			return false;
+		else
+			if (token == "R3" && countSpace == 3)
+				return true;
+		if (countSpace > 3)
+			return false;
 	}
-
-	fileC.close();
-	fileAnalysis.close();
+	return false;
 }
 
 
+bool SyntaxAnalisator::operators(std::string& code, std::string token)
+{
+	__int64 pos = 0;
+	if (token == "type")
+		return operatorDeclareData(code);
+	if (token == "Id")
+		return operatorEqual(code);
+	if (token == "condition")
+		return operatorCondition(code);
+	if (token == "for")
+		return operatorFor(code);
+	return false;
 
+}
+
+bool SyntaxAnalisator::operatorCondition(std::string& code)
+{
+	code.erase(0, 3);
+	if (parseExpression(code, true) == false)
+		return false;
+	return true;
+}
+
+bool SyntaxAnalisator::operatorFor(std::string& code)
+{
+	code.erase(0, 3);
+	std::string temp = "";
+	if (isTypeDeclarationByCode(code.substr(0, code.find(" ") - 1)) == true)
+	{
+		code.erase(0, code.find(" ")+1);
+		temp = code.substr(0, code.find("R7") + 2);
+		code.erase(0, code.find("R7") + 3);
+		if (operatorEqual(temp) == false)
+			return false;
+	}
+	temp = code.substr(0, code.find("R7") + 2);
+	code.erase(0, code.find("R7") + 3);
+	if (parseExpression(temp, true) == false)
+		return false;
+	temp = code.substr(0, code.find("R4")-1);
+	code = "";
+	if (operatorEqual(temp) == false)
+		return false;
+
+	return true;
+}
+
+bool SyntaxAnalisator::operatorDeclareData(std::string& code)
+{
+	if (code.find("O5") != std::string::npos)
+		if (operatorEqual(code) == false)
+			return false;
+		else
+			return true;
+
+	__int64 pos = 0;
+	std::string token = "";
+	bool ident_comma = false;
+	while ((pos = code.find(' ')) != std::string::npos || code.length() != 0)
+	{
+		token = getToken(code);
+		if (token == "R7" && ident_comma == true)
+			break;
+		else
+			if (token == "R7")
+				return false;
+
+		if (isIdentifierByCode(token) == true && ident_comma == false)
+		{
+			ident_comma = true;
+			continue;
+		}
+		else
+			if (isIdentifierByCode(token) == true)
+				return false;
+		
+		if (token == "R8" && ident_comma == true)
+		{
+			ident_comma = false;
+			continue;
+		}
+		else
+			if (token == "R8")
+				return false;
+
+	}
+	return true;
+
+}
+
+bool SyntaxAnalisator::operatorEqual(std::string& code)
+{
+	__int64 pos = 0;
+	std::string token = "";
+	
+	while ((pos = code.find(' ')) != std::string::npos || code.length() != 0)
+	{
+		std::string fragmentBeforeComma = "";
+		__int64 posComma = code.find('R8');
+		if (posComma != std::string::npos && code.find("O5", posComma) != std::string::npos)
+		{
+			fragmentBeforeComma = code.substr(0, posComma);
+			code.erase(0, posComma + 1);
+			if(parseExpression(fragmentBeforeComma,false)==false)
+				return false;
+			
+			if(isTypeDeclarationByCode(code.substr(0,2))==true || isOperationByCode(code.substr(0, 2))==true || isSymbolConst(code.substr(0, 2))==true
+				|| isCloseAnyBracket(code.substr(0, 2))==true || isOpenAnyBracket(code.substr(0, 2))==true)
+				return false;
+			continue;
+		}
+
+		if (code.find('R7') != std::string::npos)
+		{
+			if (parseExpression(code,false) == false)
+				return false;
+			return true;
+		}
+
+	}
+	return true;
+}
+
+void pushStackAndPop(std::stack<std::string>& stack,std::string token)
+{
+	stack.pop();
+	stack.push(token);
+}
+
+bool SyntaxAnalisator::parseExpression(std::string& fragment,bool condition)
+{
+	std::stack<std::string> temp_stack;
+	__int64 pos = 0;
+	std::string token = "";
+	bool (*pFunction_Id_Num_Sym_OperByCode)(std::string) = NULL;
+
+	while ((pos = fragment.find(' ')) != std::string::npos || fragment.length() != 0)
+	{
+		token = getToken(fragment);
+		fragment.erase(0, pos + 1);
+		if (temp_stack.size() == 0)
+			temp_stack.push(token);
+		if (token == "R7" && condition==false)
+			return true;
+		if (condition == true && token == "R4" && fragment.length() == 0)
+			return true;
+
+		if (positionTypeConversion(fragment) == 0)
+		{
+			pushStackAndPop(temp_stack,fragment.substr(0, 2));
+			pushStackAndPop(temp_stack, fragment.substr(3, fragment.find("R4") - 2));
+			pushStackAndPop(temp_stack, fragment.substr(fragment.find("R4"), 2));
+			fragment.erase(0, 10);
+			token = getToken(fragment);
+		}
+		if (isOpenAnyBracket(token) == true && isCloseAnyBracket(temp_stack.top()) == false)
+		{
+			pushStackAndPop(temp_stack, token);
+			continue;
+		}
+		else
+			if (isOpenAnyBracket(token) == true)
+				return false;
+
+		if (isCloseAnyBracket(token) == true && temp_stack.top() != "R8")
+		{
+			pushStackAndPop(temp_stack, token);
+			continue;
+		}
+		else
+			if (isCloseAnyBracket(token) == true && temp_stack.top() != "R8")
+				return false;
+			
+		pFunction_Id_Num_Sym_OperByCode = &isIdentifierByCode;
+		if (checkToken(pFunction_Id_Num_Sym_OperByCode, temp_stack, token) == 0)
+			return false;
+		else
+		{
+			pFunction_Id_Num_Sym_OperByCode = &isNumberConstByCode;
+			if (checkToken(pFunction_Id_Num_Sym_OperByCode, temp_stack, token) == 0)
+				return false;
+			else
+			{
+				pFunction_Id_Num_Sym_OperByCode = &isSymbolConst;
+				if (checkToken(pFunction_Id_Num_Sym_OperByCode, temp_stack, token) == 0)
+					return false;
+				else
+				{
+					pFunction_Id_Num_Sym_OperByCode = &isOperationByCode;
+					if (checkToken(pFunction_Id_Num_Sym_OperByCode, temp_stack, token) == 0)
+						return false;
+					else
+						pushStackAndPop(temp_stack, token);
+				}
+			}
+		}
+		
+		
+	
+		/*if (isIdentifierByCode(token) == true && isIdentifierByCode(temp_stack.top()) == false)
+		{
+			pushStackAndPop(temp_stack, token);
+			continue;
+		}
+		else
+			if (isIdentifierByCode(token)==true)
+				return false;
+
+		if (isNumberConstByCode(token) == true && isNumberConstByCode(temp_stack.top()) == false)
+		{
+			pushStackAndPop(temp_stack, token);
+			continue;
+		}
+		else
+			if (isNumberConstByCode(token))
+				return false;
+
+		if (isSymbolConst(token) == true && isSymbolConst(temp_stack.top()) == false)
+		{
+			pushStackAndPop(temp_stack, token);
+			continue;
+		}
+		else
+			if (isSymbolConst(token)==true)
+				return false;
+		if (isOperationByCode(token) == true && isOperationByCode(temp_stack.top()) == false)
+		{
+			pushStackAndPop(temp_stack, token);
+			continue;
+		}
+		else
+			if (isOperationByCode(token))
+				return false;*/
+		
+	}
+
+	return true;
+}
+
+
+int checkToken(bool (*pFunctByCode)(std::string), std::stack<std::string>& temp_stack, std::string token)
+{
+	if ((*pFunctByCode)(token) == true && (*pFunctByCode)(temp_stack.top()) == false)
+	{
+		//pushStackAndPop(temp_stack, token);
+		return 1;
+	}
+	else
+		if ((*pFunctByCode)(token) == true)
+			return 0;
+	return 1;
+}

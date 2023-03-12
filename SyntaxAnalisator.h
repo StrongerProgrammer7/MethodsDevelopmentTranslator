@@ -1,24 +1,22 @@
 #pragma once
-#ifndef SYNTAXANALISATOR_H
-#define SYNTAXANALISATOR_H
+#include "ReversePolishNotation.h"
 
-#include "Translator.h"
 
-class SyntaxAnalisator : public Translator
+class SyntaxAnalisator : public ReversePolishNotation
 {
 public:
 	SyntaxAnalisator();
-protected:
-	void makeSyntaxAnalyze(std::string from_file_C, std::string to_file_lexical);
 	~SyntaxAnalisator();
+protected:
+	bool makeSyntaxAnalyze();
+	/*std::string readFromFileToString();*/
 private:
-	void addCode(std::string str, std::map<std::string, std::string>& table, int numTable);
-	int checkStringSingleElem(std::string const& word);
-	std::string getCodeWordLength_1(std::string word);
-	std::string getCodeWordLengthGreaterOne(std::string word);
-	std::string getCodeWord(std::string word);
-	bool skipAnalyzeComment(bool& readComment, std::string line, __int64& index, std::ofstream& file, std::string& word);
-	bool skipAnalyzeOneLineComment(bool readComment, std::string line, __int64 index, std::ofstream& file);
-	bool isLibrary_header(std::string const& word);
+	bool setArguments(std::string& code);
+	bool operators(std::string& code, std::string token);
+	bool operatorDeclareData(std::string& code);
+	bool operatorEqual(std::string& code);
+	bool operatorCondition(std::string& code);
+	bool operatorFor(std::string& code);
+	bool parseExpression(std::string& fragment, bool condition);
 };
-#endif
+

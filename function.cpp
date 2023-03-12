@@ -101,7 +101,11 @@ std::string intToStrWithSpace(int num)
 
 bool isSpaceInEndString(std::string line)
 {
-	return line.rfind(" ") == line.length() - 1 ? true : false;
+	if (isServiceSymbols(line[line.length() - 1]) == true)
+		return line.rfind(" ") == line.length() - 2 ? true : false;
+	else
+		return line.rfind(" ") == line.length() - 1 ? true : false;
+	//return line.rfind(" ") == line.length() - 1 ? true : false;
 }
 
 

@@ -38,12 +38,13 @@ namespace MethodsDevelopmentTranslator {
 	private: System::Windows::Forms::TextBox^ tb_textC;
 	private: System::Windows::Forms::Button^ btn_analisator;
 	private: System::Windows::Forms::TextBox^ tb_syntaxAnalisator;
-	private: System::Windows::Forms::TextBox^ tb_nameFileAnylize;
+
 	private: System::Windows::Forms::TextBox^ tb_reversePolishNotation;
 	private: System::Windows::Forms::Button^ btn_reversePolishNotation;
 	private: System::Windows::Forms::TextBox^ tb_codeCSharp;
 
 	private: System::Windows::Forms::Button^ btn_toCSharp;
+	private: System::Windows::Forms::Button^ btn_syntax_analisator;
 
 	protected:
 
@@ -65,11 +66,11 @@ namespace MethodsDevelopmentTranslator {
 			this->tb_textC = (gcnew System::Windows::Forms::TextBox());
 			this->btn_analisator = (gcnew System::Windows::Forms::Button());
 			this->tb_syntaxAnalisator = (gcnew System::Windows::Forms::TextBox());
-			this->tb_nameFileAnylize = (gcnew System::Windows::Forms::TextBox());
 			this->tb_reversePolishNotation = (gcnew System::Windows::Forms::TextBox());
 			this->btn_reversePolishNotation = (gcnew System::Windows::Forms::Button());
 			this->tb_codeCSharp = (gcnew System::Windows::Forms::TextBox());
 			this->btn_toCSharp = (gcnew System::Windows::Forms::Button());
+			this->btn_syntax_analisator = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// btn_loadFile
@@ -102,31 +103,19 @@ namespace MethodsDevelopmentTranslator {
 			this->btn_analisator->Name = L"btn_analisator";
 			this->btn_analisator->Size = System::Drawing::Size(208, 23);
 			this->btn_analisator->TabIndex = 2;
-			this->btn_analisator->Text = L"Syntax analisator";
+			this->btn_analisator->Text = L"Lexical analisator";
 			this->btn_analisator->UseVisualStyleBackColor = true;
 			this->btn_analisator->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_analisator_Click);
 			// 
 			// tb_syntaxAnalisator
 			// 
 			this->tb_syntaxAnalisator->BackColor = System::Drawing::SystemColors::ControlLightLight;
-			this->tb_syntaxAnalisator->Location = System::Drawing::Point(228, 73);
+			this->tb_syntaxAnalisator->Location = System::Drawing::Point(228, 43);
 			this->tb_syntaxAnalisator->Multiline = true;
 			this->tb_syntaxAnalisator->Name = L"tb_syntaxAnalisator";
 			this->tb_syntaxAnalisator->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->tb_syntaxAnalisator->Size = System::Drawing::Size(208, 362);
+			this->tb_syntaxAnalisator->Size = System::Drawing::Size(208, 392);
 			this->tb_syntaxAnalisator->TabIndex = 3;
-			// 
-			// tb_nameFileAnylize
-			// 
-			this->tb_nameFileAnylize->BackColor = System::Drawing::Color::OldLace;
-			this->tb_nameFileAnylize->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->tb_nameFileAnylize->Location = System::Drawing::Point(228, 43);
-			this->tb_nameFileAnylize->MaxLength = 2000;
-			this->tb_nameFileAnylize->Name = L"tb_nameFileAnylize";
-			this->tb_nameFileAnylize->Size = System::Drawing::Size(208, 22);
-			this->tb_nameFileAnylize->TabIndex = 4;
-			this->tb_nameFileAnylize->Text = L"lexical.txt";
-			this->tb_nameFileAnylize->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// tb_reversePolishNotation
 			// 
@@ -155,7 +144,7 @@ namespace MethodsDevelopmentTranslator {
 			this->tb_codeCSharp->BackColor = System::Drawing::SystemColors::Info;
 			this->tb_codeCSharp->Font = (gcnew System::Drawing::Font(L"Consolas", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->tb_codeCSharp->Location = System::Drawing::Point(656, 42);
+			this->tb_codeCSharp->Location = System::Drawing::Point(656, 54);
 			this->tb_codeCSharp->Multiline = true;
 			this->tb_codeCSharp->Name = L"tb_codeCSharp";
 			this->tb_codeCSharp->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
@@ -164,13 +153,23 @@ namespace MethodsDevelopmentTranslator {
 			// 
 			// btn_toCSharp
 			// 
-			this->btn_toCSharp->Location = System::Drawing::Point(695, 13);
+			this->btn_toCSharp->Location = System::Drawing::Point(699, 27);
 			this->btn_toCSharp->Name = L"btn_toCSharp";
 			this->btn_toCSharp->Size = System::Drawing::Size(208, 23);
 			this->btn_toCSharp->TabIndex = 8;
 			this->btn_toCSharp->Text = L"Get code C#";
 			this->btn_toCSharp->UseVisualStyleBackColor = true;
 			this->btn_toCSharp->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_toCSharp_Click);
+			// 
+			// btn_syntax_analisator
+			// 
+			this->btn_syntax_analisator->Location = System::Drawing::Point(732, 2);
+			this->btn_syntax_analisator->Name = L"btn_syntax_analisator";
+			this->btn_syntax_analisator->Size = System::Drawing::Size(137, 23);
+			this->btn_syntax_analisator->TabIndex = 9;
+			this->btn_syntax_analisator->Text = L"Syntax analisator";
+			this->btn_syntax_analisator->UseVisualStyleBackColor = true;
+			this->btn_syntax_analisator->Click += gcnew System::EventHandler(this, &Translator_LanguageC::Btn_syntax_analisator_Click);
 			// 
 			// Translator_LanguageC
 			// 
@@ -180,11 +179,11 @@ namespace MethodsDevelopmentTranslator {
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::MintCream;
 			this->ClientSize = System::Drawing::Size(954, 452);
+			this->Controls->Add(this->btn_syntax_analisator);
 			this->Controls->Add(this->btn_toCSharp);
 			this->Controls->Add(this->tb_codeCSharp);
 			this->Controls->Add(this->btn_reversePolishNotation);
 			this->Controls->Add(this->tb_reversePolishNotation);
-			this->Controls->Add(this->tb_nameFileAnylize);
 			this->Controls->Add(this->tb_syntaxAnalisator);
 			this->Controls->Add(this->btn_analisator);
 			this->Controls->Add(this->tb_textC);
@@ -205,6 +204,6 @@ namespace MethodsDevelopmentTranslator {
 			 System::Void Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e);
-
+			 System::Void Btn_syntax_analisator_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

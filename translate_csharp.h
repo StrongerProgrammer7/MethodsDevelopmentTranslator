@@ -1,7 +1,7 @@
 #pragma once
-#include "ReversePolishNotation.h"
+#include "SyntaxAnalisator.h"
 
-class Translate_csharp : public ReversePolishNotation
+class Translate_csharp : public SyntaxAnalisator
 {
 public:
 	Translate_csharp();
