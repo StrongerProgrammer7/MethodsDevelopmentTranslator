@@ -1,1 +1,15 @@
-float count = 15.10;
+#include "stdio.h"
+#include <malloc.h>
+
+int sizeNumber(int num)
+{
+	int count = 0;
+	return count;
+}
+
+int main(int argc, const char* argv[])
+{
+	int size = 0 sizeNumber(36);
+
+	return 0;
+}

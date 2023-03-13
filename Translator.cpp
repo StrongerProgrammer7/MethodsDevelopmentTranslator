@@ -10,6 +10,17 @@ Translator::~Translator()
 {
 }
 
+System::String^ Translator::StlWStringToString(std::string const& os)
+{
+	System::String^ str = gcnew System::String(os.c_str());
+	//String^ str = gcnew String("");
+	return str;
+}
+
+void Translator::problemDetected(std::string problem)
+{
+	System::Windows::Forms::MessageBox::Show(StlWStringToString(problem), "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+}
 
 bool Translator::isTypeDeclarationByCode(std::string type_code)
 {

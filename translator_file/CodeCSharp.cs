@@ -32,7 +32,7 @@ using System;
 		}
 // Main 
 /* double
-comment 
+comment
 */ 
 		static void Main(string[] args)
 		{

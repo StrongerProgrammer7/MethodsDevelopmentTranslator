@@ -42,7 +42,6 @@ System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_loadFile_Cl
 			marshalString(filePathName, fileText_C);
 			btn_analisator->Enabled = true;
 			mkdir("translator_file");
-			translator.makeTranslate(fileText_C);
 		}
 		catch (const std::exception&)
 		{
@@ -58,38 +57,52 @@ bool isExtensionTXT(String^ line)
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_analisator_Click(System::Object^ sender, System::EventArgs^ e)
 {
-
-		/*std::string fileName = "";
-		marshalString(tb_nameFileAnylize->Text, fileName);*/
-		
-		StreamReader^ fileAnalyze = File::OpenText("./translator_file/lexical.txt");
-		tb_syntaxAnalisator->Text = fileAnalyze->ReadToEnd();
-		fileAnalyze->Close();
-		btn_analisator->Enabled = false;
-
+	/*std::string fileName = "";
+	marshalString(tb_nameFileAnylize->Text, fileName);*/
+	translator.lexicalAnalyze(fileText_C);
+	StreamReader^ fileAnalyze = File::OpenText("./translator_file/lexical.txt");
+	tb_syntaxAnalisator->Text = fileAnalyze->ReadToEnd();
+	fileAnalyze->Close();
+	btn_analisator->Enabled = false;
+	btn_reversePolishNotation->Enabled = true;
 }
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e)
 {
-		/*std::string file = "";
-		marshalString(tb_nameFileAnylize->Text, file);*/
-
-		StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/RPN.txt", System::Text::Encoding::GetEncoding(1251));
-		tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
-		fileAnalyze->Close();
-		btn_analisator->Enabled = false;
-	
+	/*std::string file = "";
+	marshalString(tb_nameFileAnylize->Text, file);*/
+	translator.reversePolishNotAnalyze();
+	StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/RPN.txt", System::Text::Encoding::GetEncoding(1251));
+	tb_reversePolishNotation->Text = fileAnalyze->ReadToEnd();
+	fileAnalyze->Close();
+	btn_reversePolishNotation->Enabled = false;
+	btn_syntax_analisator->Enabled = true;
 }
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e)
 {
-		StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/CodeCSharp.cs", System::Text::Encoding::GetEncoding(1251));
-		tb_codeCSharp->Text = fileAnalyze->ReadToEnd();
-		fileAnalyze->Close();
-		btn_analisator->Enabled = false;
+	translator.translateToCSharp();
+	StreamReader^ fileAnalyze = gcnew StreamReader("./translator_file/CodeCSharp.cs", System::Text::Encoding::GetEncoding(1251));
+	tb_codeCSharp->Text = fileAnalyze->ReadToEnd();
+	fileAnalyze->Close();
+	btn_toCSharp->Enabled = false;
+
 }
 
 System::Void MethodsDevelopmentTranslator::Translator_LanguageC::Btn_syntax_analisator_Click(System::Object^ sender, System::EventArgs^ e)
 {
-	MessageBox::Show("Check", "Check success!", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	if (translator.syntaxAnalyze() == true)
+	{
+		MessageBox::Show("No problem", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		btn_syntax_analisator->Enabled = false;
+		btn_toCSharp->Enabled = true;
+	}
+	else
+	{
+		tb_reversePolishNotation->Text = "";
+		tb_syntaxAnalisator->Text = "";
+		btn_syntax_analisator->Enabled = false;
+		btn_toCSharp->Enabled = false;
+	}
+		
 }

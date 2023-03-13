@@ -11,13 +11,7 @@ LexicalAnalisator::~LexicalAnalisator()
 {
 }
 
-
-System::String^ StlWStringToString(std::string const& os)
-{
-	System::String^ str = gcnew System::String(os.c_str());
-	//String^ str = gcnew String("");
-	return str;
-}
+bool isEqual = false;
 
 void LexicalAnalisator::addCode(std::string str, std::map<std::string, std::string>& table, int numTable)
 {
@@ -56,8 +50,16 @@ std::string LexicalAnalisator::getCodeWordLength_1(std::string word)
 	case 3:
 		return getSeparators(word,true);
 	case 4:
-		if (getCodeByName(identifier,word) == "\0")
-			addCode(word, identifier, 1);
+		if (getCodeByName(identifier, word) == "\0")
+		{
+			if (isEqual == false)
+				addCode(word, identifier, 1);
+			else
+			{
+				problemDetected("Expected known identifier!");
+				return "error!";
+			}
+		}
 		return getCodeByName(identifier, word);
 	default:
 		return "";
@@ -90,7 +92,15 @@ std::string LexicalAnalisator::getCodeWordLengthGreaterOne(std::string word)
 				}
 			}
 			if (getCodeByName(identifier, word) == "\0")
-				addCode(word, identifier, 1);
+			{
+				if(isEqual == false)
+					addCode(word, identifier, 1);
+				else
+				{
+					problemDetected("Expected known identifier!");
+					return "error!";
+				}
+			}
 			return getCodeByName(identifier, word);
 		}
 	}
@@ -101,7 +111,12 @@ std::string LexicalAnalisator::getCodeWordLengthGreaterOne(std::string word)
 std::string LexicalAnalisator::getCodeWord(std::string word)
 {
 	if (word.length() == 1)
-		return getCodeWordLength_1(word);
+	{
+		std::string temp = getCodeWordLength_1(word);
+		if (temp == "R7")
+			isEqual = false;
+		return temp;
+	}
 	else
 		return getCodeWordLengthGreaterOne(word);
 }
@@ -145,8 +160,8 @@ void LexicalAnalisator::makeLexicalAnalyze(std::string filePathOrName_C, std::st
 	fileC.exceptions(std::ifstream::badbit);
 	try
 	{
+		isEqual = false;
 		fileC.open(filePathOrName_C);
-
 		if (fileC.is_open())
 		{
 			bool readComment = false;
@@ -225,6 +240,8 @@ void LexicalAnalisator::makeLexicalAnalyze(std::string filePathOrName_C, std::st
 								i++;
 							}
 							word += stringLanguageC[i];
+							if (word == "=")
+								isEqual = true;
 							fileAnalysis << getCodeWord(word) << " ";
 							word = "";
 							continue;
@@ -243,7 +260,12 @@ void LexicalAnalisator::makeLexicalAnalyze(std::string filePathOrName_C, std::st
 									else
 										i++;
 								}
-								fileAnalysis << getCodeWord(word) << " ";
+								std::string check_err = getCodeWord(word);
+								if (check_err.find("error!")!=std::string::npos)
+									return;
+
+
+								fileAnalysis << check_err << " ";
 								word = "";
 								continue;
 							}

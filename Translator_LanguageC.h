@@ -20,6 +20,9 @@ namespace MethodsDevelopmentTranslator {
 		{
 			InitializeComponent();
 			btn_analisator->Enabled = false;
+			btn_reversePolishNotation->Enabled = false;
+			btn_syntax_analisator->Enabled = false;
+			btn_toCSharp->Enabled = false;
 		}
 
 	protected:
@@ -205,5 +208,5 @@ namespace MethodsDevelopmentTranslator {
 			 System::Void Btn_reversePolishNotation_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_toCSharp_Click(System::Object^ sender, System::EventArgs^ e);
 			 System::Void Btn_syntax_analisator_Click(System::Object^ sender, System::EventArgs^ e);
-};
+	};
 }

@@ -155,7 +155,8 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 				if (lineLexical.find("W8") != std::string::npos)
 				{
 					fileAnalysis << lineLexical << std::endl;
-					countInclude++;
+					if(lineLexical.find("I") != std::string::npos)
+						countInclude++;
 					continue;
 				}
 				if (lineLexical.length() > 2 && isComment((int)lineLexical[0], (int)lineLexical[1]) && lineLexical.find("*/") == std::string::npos)
@@ -191,7 +192,7 @@ void ReversePolishNotation::reversePolishNotationAnalyze(std::string fileName_le
 					{
 						if (positionTypeConversion(lineLexical) == 0)
 						{
-							token = lineLexical.substr(3, lineLexical.find("R4")-2);
+							token = lineLexical.substr(3, lineLexical.find("R4")-4);
 							lineLexical.erase(0,10);
 						}
 						else

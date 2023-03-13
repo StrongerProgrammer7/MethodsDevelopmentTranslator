@@ -6,37 +6,37 @@ I2 1 int I3 1 int
 I4 1 int N0 O5 
 I3 N0 O10 
 лж1 сок 
-I3 I3 N1 O4 O5 
+I3 I3 N2 O4 O5 
 I4 O20 
 лж1:
 I4 W11 
 йо
 
 /*test comment*/ 
-I5 1 int I3 1 int 
+I8 1 int I3 1 int 
 2 1 мо 
-I6 1 int I2 I3 2т O5 
-I7 1 int* W9 I6 W10 1 int 2т O3 2т 1 int* O5 
-I8 1 int N0 O5 
+I7 1 int I2 I3 2т O5 
+I9 1 int* W9 I7 W10 1 int 2т O3 2т 1 int* O5 
+I10 1 int N0 O5 
 I3 N0 O10 
 лж1 сок 
-I7 I8 2ющл I3 N1 O6 O5 
-I3 N1 O13 
-I8 O20 
+I9 I10 2ющл I3 N2 O6 O5 
+I3 N2 O13 
+I10 O20 
 лж1:
-I7 W11 
+I9 W11 
 йо
 
 // Main 
 /* double
-comment 
+comment
 */ 
-W4 1 int I9 1 int I10 1ющл 1 const char* 
+W4 1 int I5 1 int I6 1ющл 1 const char* 
 3 1 мо 
-I6 1 int I2 N2 2т O5 
-I11 1 int* I5 N2 2т O5 
+I7 1 int I2 N1 2т O5 
+I11 1 int* I8 N1 2т O5 
 I12 1 int N0 O5 
-I13 1 int N0 O5 I13 I6 O8 I13 O20 
+I13 1 int N0 O5 I13 I7 O8 I13 O20 
 лжя1 сок 
 I13 N3 O8 I13 N0 O7 O17 
 л1 сок

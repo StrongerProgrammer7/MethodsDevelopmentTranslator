@@ -1,6 +1,7 @@
 //#include "table.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
 // ( ) [  ]  {  } ;
 bool isSeparators(int const &elem)
 {

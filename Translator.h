@@ -3,7 +3,7 @@
 #define TRANSLATOR_H
 
 #include "include.h"
-//считать кол функций в отдельную переменную (ОПЗ н НП ) чтобы отправить потом в функцию кол подпрограмм 4лб
+
 class Translator
 {
 public:
@@ -117,6 +117,8 @@ protected:
 	std::string getOperations(std::string str,bool get_code);
 	std::string getCodeByName(std::map<std::string, std::string>& table, std::string str);
 	std::string getNameByCode(std::map<std::string, std::string>& table, std::string code);
+	System::String^ StlWStringToString(std::string const& os);
+	void Translator::problemDetected(std::string problem);
 };
 
 #endif

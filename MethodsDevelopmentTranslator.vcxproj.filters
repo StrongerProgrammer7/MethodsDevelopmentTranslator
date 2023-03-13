@@ -24,19 +24,19 @@
     <ClCompile Include="Translator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TranslatorFromCToCSharp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="SyntaxAnalisator.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
     <ClCompile Include="ReversePolishNotation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="translate_csharp.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TranslatorFromCToCSharp.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="LexicalAnalisator.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="SyntaxAnalisator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,19 +53,19 @@
     <ClInclude Include="Translator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ReversePolishNotation.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="translate_csharp.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TranslatorFromCToCSharp.h">
+    <ClInclude Include="SyntaxAnalisator.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ReversePolishNotation.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="LexicalAnalisator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SyntaxAnalisator.h">
+    <ClInclude Include="TranslatorFromCToCSharp.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
