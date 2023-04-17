@@ -3,14 +3,12 @@
 # MethodsDevelopmentTranslator
 <div>
 <p>The repository has translator from C to C#, on the language C++</p>
-<h3>Syntax Analisator</h3>
 <p>Base file:  (russian language: Vishnikov Y.M. BalabaevaI.Y. PDF):</p>
 [](https://github.com/StrongerProgrammer7/MethodsDevelopmentTranslator/files/10741055/_.pdf)
 <p>
-<h4> 7 Classes </h4>
+<h4> 6 Classes </h4>
 <ul>
 <li>Translator (parent) </li>
-<li>LexicalAnalisator (inherit up, parent) </li>
 <li>LexicalAnalisator (inherit up, parent) </li>
 <li>ReversePolishNotation (inherit up, parent) </li>
 <li>SyntaxAnalisator (inherit up, parent) </li>
