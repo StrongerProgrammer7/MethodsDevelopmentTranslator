@@ -24,7 +24,7 @@ Users should use last class. Last class using next methods:
 </ul>
 </p>
 <p> Using:
-<pre>TranslatorFromCToCSharp translator
+<pre>TranslatorFromCToCSharp translator;
     &emsp;translator.lexicalAnalyze(fileText_C);
     &emsp;translator.reversePolishNotAnalyze();
     &emsp;In condition(if) translator.syntaxAnalyze() == true
@@ -33,14 +33,13 @@ Users should use last class. Last class using next methods:
 <p> All method save file to folder "translator_file"</p>
 </p>
 <h3> TODO </h3>
-<p>
+
 Multiple inheritance is present.<br> The reason for this table decision.<br>
 Solution <br>
 1) What is, and inherit tables (identifiers, constants, etc.)<br>
-2) All classes will be inherited from the same class, as they should be "Translator", 
-<br>but then you have to pass in the table constructor, and make them open or apply getters.
-3)Maybe using pattern "Template"
-</p>
+2) All classes will be inherited from the same class, as they should be "Translator", <br>but then you have to pass in the table constructor, and make them open or apply getters
+3) Maybe using pattern "Template"
+
 
 <p align="center"><img src="https://user-images.githubusercontent.com/71569051/232427242-16bbfa23-dd7b-4844-9fc9-bade42491847.png"></p>
 </div>
